@@ -195,6 +195,7 @@ DEPENDENCIES
   guard-minitest (= 2.4.4)
   jbuilder (~> 2.5)
   jquery-rails
+  listen (= 3.0.8)
   minitest-reporters (= 1.1.9)
   puma (~> 3.0)
   rails (~> 5.0.0)
