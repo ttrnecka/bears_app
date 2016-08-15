@@ -6,6 +6,11 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     @base_title = "BEARS"
   end
   
+  test "should get root" do
+    get root_url
+    assert_response :success
+  end
+  
   test "should get about" do
     get static_pages_about_url
     assert_response :success
