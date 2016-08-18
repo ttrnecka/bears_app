@@ -6,9 +6,12 @@
   </head>
 
   <body>
-    <%= render "layouts/header" %>
-    <div class="container-fluid">
-      <%= yield %>
+  	<div id="wrapper">
+      <%= render "layouts/nav" %>
+      <div id="page-wrapper">
+      	<%= render "layouts/page_header" %>
+      	<%= yield %>
+      </div>
       <%= render "layouts/footer" %>
     </div>
   </body>
