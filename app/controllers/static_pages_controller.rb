@@ -6,6 +6,7 @@ class StaticPagesController < ApplicationController
   end
   
   def home
+    redirect_to login_path if !logged_in?
   end
   
   def contact

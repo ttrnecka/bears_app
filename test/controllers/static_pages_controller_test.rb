@@ -10,8 +10,10 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get home" do
     get root_path
-    assert_response :success
-    assert_select "title", full_title
+    assert_response :redirect
+    assert_redirected_to login_path
+    follow_redirect!
+    assert_select "title", full_title("Log In")
   end
 
   test "should get help" do

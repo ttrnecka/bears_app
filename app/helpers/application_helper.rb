@@ -9,4 +9,9 @@ module ApplicationHelper
       page_title + " | " + base_title
     end
   end
+  
+  # returns proper wrapper id for
+  def wrapper_id
+    logged_in? ? "page-wrapper" : "page-wrapper-intro"
+  end
 end
