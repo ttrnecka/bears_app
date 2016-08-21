@@ -5,3 +5,9 @@ tomas:
   email: trnecka@gmail.com
   login: trnecka
   password_digest: <%= User.digest('password') %>
+  
+archer:
+  name: Sterling Archer
+  email: duchess@example.gov
+  login: archer
+  password_digest: <%= User.digest('password') %>

@@ -55,4 +55,26 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     log_in_as(@user, remember_me: '0')
     assert_nil cookies['remember_token']
   end
+  
+  test "friendly forwarding forgets forward path after first forwarding" do
+    get edit_user_path(@user)
+    follow_redirect!
+    log_in_as @user
+    assert_redirected_to edit_user_path(@user)
+    assert_nil session[:forwarding_url]
+  end
+  
+  test "redirects to root_url if opens login_path when logged in" do
+    log_in_as @user
+    get login_path
+    assert_redirected_to root_url
+  end
+  
+  test "redirects to root_url if opens signup_path when logged in" do
+    log_in_as @user
+    get signup_path
+    assert_redirected_to root_url
+    post signup_path
+    assert_redirected_to root_url
+  end
 end

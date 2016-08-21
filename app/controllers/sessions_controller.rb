@@ -1,13 +1,16 @@
 class SessionsController < ApplicationController
+  before_action only: [:new], if: -> { logged_in? } do |controller|
+    redirect_to root_url
+  end
+  
   def new
   end
   
   def create
-    @user = User.find_by(login: params[:session][:login].downcase)
-    if @user && @user.authenticate(params[:session][:password])
+    if @user = User.authenticate(params[:session][:login],params[:session][:password])
       log_in @user
       params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)
-      redirect_to root_path
+      redirect_back_or root_path
     else
       flash.now[:danger] = 'Invalid login/password combination'
       render 'new'

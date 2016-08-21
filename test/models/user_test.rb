@@ -4,6 +4,7 @@ class UserTest < ActiveSupport::TestCase
   def setup
     @user = User.new(name: "Example User", email: "user@email.com", login: "user",
                      password: "foobar", password_confirmation: "foobar")
+    @local_user = users(:tomas)
   end
   
   test "should be valid" do
@@ -84,5 +85,38 @@ class UserTest < ActiveSupport::TestCase
   
   test "authenticated? should return false for a user with nil digest" do
     assert_not @user.authenticated?('')
+  end
+  
+  test "User.authenticate with valid local account" do
+    assert User.authenticate(@local_user.login,"password")
+  end
+  
+  test "User.authenticate with invalid local account and invalid AD account" do
+    Adauth.stub :authenticate, false do
+      assert_not User.authenticate(@local_user.login,"invalid_password")
+    end
+  end
+  
+  test "User.authenticate with valid AD account + AD to User transformation" do
+    ad_model = OpenStruct.new(login:'new_ad_login',email:'email@email.com',first_name:"AD",last_name:'Login')
+    user = nil
+    Adauth.stub :authenticate, ad_model do
+      assert_difference 'User.count', 1 do
+        assert user = User.authenticate(ad_model.login,"valid_AD_password")
+      end
+      assert_equal user.login, ad_model.login
+      assert_equal user.email, ad_model.email
+      assert_equal user.name, "#{ad_model.first_name} #{ad_model.last_name}"
+    end
+    # AD can loggin again + empty email handling
+    ad_model = OpenStruct.new(login:'new_ad_login',email:'',first_name:"AD",last_name:'Login')
+    Adauth.stub :authenticate, ad_model do
+      assert_difference 'User.count', 0 do
+        assert user = User.authenticate(ad_model.login,"valid_AD_password")
+      end
+      assert_equal user.login, ad_model.login
+      assert_equal user.email, "unknown@unknown.com"
+      assert_equal user.name, "#{ad_model.first_name} #{ad_model.last_name}"
+    end
   end
 end

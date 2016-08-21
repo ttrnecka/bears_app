@@ -1,11 +1,13 @@
-<% provide :title, "Sign Up"%>
-<% provide(:button_text, 'Create my account') %>
-<% provide(:form_url, signup_path) %>
+<% provide :title, "Edit user"%>
+<% provide :no_headline, true%>
+<% provide(:button_text, 'Save changes') %>
+<% provide(:form_url, user_path(@user)) %>
+
 <div class="row">
   <div class="col-md-4 col-md-offset-4">
 	<div class="login-panel panel panel-default">
     	<div class="panel-heading">
-        	<h3 class="panel-title">Please Sign Up</h3>
+        	<h3 class="panel-title">Update your profile</h3>
         </div>
         <%= render 'form' %>
      </div>

@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include Adauth::Rails::ModelBridge
+  
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   
   attr_accessor :remember_token
@@ -8,9 +10,16 @@ class User < ApplicationRecord
   validates :name, presence: true, length: {maximum: 50}
   validates :email, presence: true, length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}
   validates :login, presence: true, length: {maximum: 255}, uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 6 }, presence: true
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   
   has_secure_password
+  
+  AdauthMappings = {
+        :login => :login,
+        :email => :email
+  }
+  
+  AdauthSearchField = [:login, :login]
   
   # Remembers a user in the database for use in persistent sessions.
   def remember
@@ -29,15 +38,44 @@ class User < ApplicationRecord
     BCrypt::Password.new(remember_digest).is_password?(remember_token)
   end
   
-  # Returns the hash digest of the given string.
-  def self.digest(string)
-    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
-                                                  BCrypt::Engine.cost
-    BCrypt::Password.create(string, cost: cost)
-  end
+  class << self
+    # Returns the hash digest of the given string.
+    def digest(string)
+      cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                    BCrypt::Engine.cost
+      BCrypt::Password.create(string, cost: cost)
+    end
   
-  # Returns a random token.
-  def self.new_token
-    SecureRandom.urlsafe_base64
+    # Returns a random token.
+    def new_token
+      SecureRandom.urlsafe_base64
+    end
+  
+    # Checks both authentication methods (local and AD)
+    def authenticate(login,password)
+      user = User.find_by(login: login.downcase)
+      # first try local authentication, nil password means AD account
+      if (user && !user.password_digest.nil? && user.authenticate(password))
+        user
+      # then AD authentication
+      elsif auser = Adauth.authenticate(login,password)
+        User.return_and_create_from_adauth(auser)
+      else
+        false
+      end
+    end
+    
+    # Override Adauth finder to allow some further actions
+    def return_and_create_from_adauth(ad_model)
+      user = super(ad_model)
+      # some AD are emailless, create dummy as our app requires it
+      if user.email.blank?
+        user.email = "unknown@unknown.com"
+      end
+      # create name
+      user.name = "#{ad_model.first_name} #{ad_model.last_name}"
+      user.save(validate: false)
+      user
+    end
   end
 end
