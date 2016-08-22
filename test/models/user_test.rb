@@ -119,4 +119,52 @@ class UserTest < ActiveSupport::TestCase
       assert_equal user.name, "#{ad_model.first_name} #{ad_model.last_name}"
     end
   end
+  
+  test "User.authenticate calls update_adauth_cfg " do
+    @called = 0
+    ad_model = OpenStruct.new(login:'new_ad_login',email:'email@email.com',first_name:"AD",last_name:'Login')
+    
+    User.stub :update_adauth_cfg, Proc.new { @called+=1 } do
+      Adauth.stub :authenticate, ad_model do
+        User.authenticate(ad_model.login,"valid_AD_password")
+      end
+    end
+    assert_equal 1, @called
+  end
+  
+  test "update_adauth_cfg updated Adauth config" do
+    # entry adauth setting
+    Adauth.configure do |c|
+      c.domain = "domain"
+      c.server = "server"
+      c.base = "base"
+      c.allowed_groups = "allowed_groups"
+      c.query_user="user"
+      c.query_password="password"
+    end
+    # initiate config
+    old_domain = AppConfig.get "ad_domain"
+    old_server = AppConfig.get "ad_controller"
+    old_base = AppConfig.get "ad_ldap_base"
+    old_allowed_groups = AppConfig.get "ad_allowed_groups"
+    AppConfig.set "ad_domain", "new_domain"
+    AppConfig.set "ad_controller", "new_server"
+    AppConfig.set "ad_ldap_base", "new_base"
+    #AppConfig.set "ad_allowed_groups", "new_allowed_groups"
+    
+    # actual test
+    User.send :update_adauth_cfg, @local_user.login,@local_user.password
+    ad_config = Adauth.instance_variable_get(:@config)
+    assert_equal "new_domain", ad_config.domain
+    assert_equal "new_server", ad_config.server
+    assert_equal "new_base", ad_config.base
+    assert_equal [], ad_config.allowed_groups
+    assert_equal @local_user.login, ad_config.query_user
+    assert_equal @local_user.password, ad_config.query_password
+     
+    # cfg restore
+    AppConfig.set "ad_domain", old_domain
+    AppConfig.set "ad_controller", old_server
+    AppConfig.set "ad_ldap_base", old_base
+  end
 end

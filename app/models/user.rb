@@ -54,6 +54,7 @@ class User < ApplicationRecord
     # Checks both authentication methods (local and AD)
     def authenticate(login,password)
       user = User.find_by(login: login.downcase)
+      update_adauth_cfg(login,password)
       # first try local authentication, nil password means AD account
       if (user && !user.password_digest.nil? && user.authenticate(password))
         user
@@ -72,10 +73,33 @@ class User < ApplicationRecord
       if user.email.blank?
         user.email = "unknown@unknown.com"
       end
+      
       # create name
-      user.name = "#{ad_model.first_name} #{ad_model.last_name}"
+      begin
+        user.name = "#{ad_model.first_name} #{ad_model.last_name}"
+      rescue NoMethodError
+        user.name=ad_model.login
+      end
+      
       user.save(validate: false)
       user
     end
   end
 end
+
+class User
+  class << self
+    private
+    def update_adauth_cfg(login,password)
+      Adauth.configure do |c|
+        c.domain = AppConfig.get("ad_domain") if !AppConfig.get("ad_domain").nil?
+        c.server = AppConfig.get("ad_controller") if !AppConfig.get("ad_controller").nil?
+        c.base = AppConfig.get("ad_ldap_base") if !AppConfig.get("ad_ldap_base").nil?
+        c.allowed_groups = AppConfig.get("ad_allowed_groups").split(",") if !AppConfig.get("ad_allowed_groups").nil?
+        c.query_user=login
+        c.query_password=password
+      end
+    end
+  end
+end
+

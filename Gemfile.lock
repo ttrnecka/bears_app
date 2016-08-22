@@ -66,6 +66,8 @@ GEM
     execjs (2.7.0)
     expects (0.0.3)
     ffi (1.9.14-x86-mingw32)
+    file-tail (1.1.1)
+      tins (~> 1.0)
     formatador (0.2.5)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
@@ -183,6 +185,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (2.0.5)
+    tins (1.12.0)
     turbolinks (5.0.1)
       turbolinks-source (~> 5)
     turbolinks-source (5.0.0)
@@ -211,6 +214,7 @@ DEPENDENCIES
   bootstrap_sb_admin_base_v2
   byebug
   coffee-rails (~> 4.2)
+  file-tail (~> 1.1)
   guard (= 2.13.0)
   guard-minitest (= 2.4.4)
   jbuilder (~> 2.5)

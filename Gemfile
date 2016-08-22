@@ -38,6 +38,8 @@ gem 'bootstrap_sb_admin_base_v2'
 
 gem 'adauth', '~> 2.0'
 
+gem 'file-tail', '~> 1.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

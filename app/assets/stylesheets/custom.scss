@@ -21,9 +21,10 @@ $gray-medium-light: #eaeaea;
 
 /* main */
 
-#page-wrapper2 {
+#page-wrapper-intro {
   @extend #page-wrapper;
-  margin-left:0px;
+  margin-left:20%;
+  margin-right:20%;
 }
 
 /* footer */

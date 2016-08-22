@@ -1,32 +1,32 @@
-Adauth.configure do |c|
+#Adauth.configure do |c|
 	# The Domain name of your Domain
 	#
 	# This is usually my_company.com or my_company.local
 	#
 	# If you don't know your domain contact your IT support,
 	# it will be the DNS suffix applied to your machines
-	c.domain = "example.com"
+	#c.domain = "example.com"
 
 	# Adauth needs a query user to interact with the domain.
 	# This user can be anything with domain access
 	#
 	# If Adauth doesn't work contact your IT support and make sure this account has full query access
-	c.query_user = ""
-	c.query_password = ""
+	#c.query_user = ""
+	#c.query_password = ""
 
 	# The IP address or Hostname of a DC (Domain Controller) on your network
 	#
 	# This could be anything and probably wont be 127.0.0.1
 	#
 	# Again contact your IT Support if you can't work this out
-	c.server = "127.0.0.1"
+	#c.server = "127.0.0.1"
 
 	# The LDAP base of your domain/intended users
 	#
 	# For all users in your domain the base would be:
 	# dc=example, dc=com
 	# OUs can be prepeneded to restrict access to your app
-	c.base = "dc=example, dc=com"
+	#c.base = "dc=example, dc=com"
 
 	# The port isn't always needed as Adauth defaults to 389 the LDAP Port
 	#
@@ -50,4 +50,7 @@ Adauth.configure do |c|
 	#
 	# Takes an array for group names
 	#c.denied_groups = ["Group1", "Group2"]
-end
+#end
+adauth_logfile = File.join(ApplicationController::LOG_DIR,"adauth.log")
+ADAUTH_LOG=BearsLogger.initiate_logging(adauth_logfile,level:Logger::INFO)
+Adauth.logger = ADAUTH_LOG

@@ -1,0 +1,9 @@
+---
+development:
+  ad_domain: EMEA
+  ad_controller: s42w0207.emea.hpqcorp.net
+  ad_ldap_base: DC=emea,DC=cpqcorp,DC=net
+production:
+  ad_domain: EMEA
+  ad_controller: s42w0207.emea.hpqcorp.net
+  ad_ldap_base: DC=emea,DC=cpqcorp,DC=net
