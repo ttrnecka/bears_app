@@ -1,6 +1,6 @@
-require_relative '../../lib/app_config.rb'
-class TestBearsLogger < Minitest::Test
-  
+require 'test_helper'
+
+class TestAppConfig < Minitest::Test
   def setup
     AppConfig.load_config
     AppConfig.set "test","subtest", 1

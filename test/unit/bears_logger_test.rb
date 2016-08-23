@@ -1,5 +1,5 @@
-require "minitest/autorun"
-require_relative '../../lib/bears_logger.rb'
+require 'test_helper'
+
 class TestBearsLogger < Minitest::Test
   
   def setup

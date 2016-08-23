@@ -9,9 +9,6 @@ class StaticPagesController < ApplicationController
     redirect_to login_path if !logged_in?
   end
   
-  def contact
-  end
-  
   def news
   end
 end
