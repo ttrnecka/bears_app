@@ -7,6 +7,10 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     @old_domain = AppConfig.get "ad_domain"
     @old_server = AppConfig.get "ad_controller"
     @old_base = AppConfig.get "ad_ldap_base"
+    #put test data
+    AppConfig.set "ad_domain", "test_domain"
+    AppConfig.set "ad_controller", "test_server"
+    AppConfig.set "ad_ldap_base", "test_base"
   end
   
   def teardown
@@ -21,6 +25,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     post login_path, params: { session: { login: "", password: "" } }
     assert_template 'sessions/new'
     assert_not flash.empty?
+    assert_select "div.alert", {text: /Invalid/}
     get root_path
     assert flash.empty?
   end
@@ -88,14 +93,10 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   end
   
   test "shows flash message when AD authentication does not work" do
-    #put test data
-    AppConfig.set "ad_domain", "test_domain"
-    AppConfig.set "ad_controller", "test_server"
-    AppConfig.set "ad_ldap_base", "test_base"
-    
     log_in_as users(:ad_user)
     assert_redirected_to login_url
     follow_redirect!
     assert_not flash.empty?
+    assert_select "div.alert", {text: /There are problems with AD authentication/}
   end
 end

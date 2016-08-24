@@ -17,3 +17,11 @@ ad_user:
   email: ad@domain.com
   login: adaccount
   password_digest: 
+
+<% 30.times do |n| %>
+user_<%= n %>:
+  name:  <%= "User #{n}" %>
+  email: <%= "user-#{n}@example.com" %>
+  login: <%= "user-#{n}" %>
+  password_digest: <%= User.digest('password') %>
+<% end %>

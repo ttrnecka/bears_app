@@ -12,7 +12,6 @@ class SessionsController < ApplicationController
     rescue Net::LDAP::Error => e
       logger.fatal e
       logger.fatal e.backtrace
-      @user = false
       flash[:danger] = "There are problems with AD authentication, see logs for more details"
       redirect_to login_url and return
     end
