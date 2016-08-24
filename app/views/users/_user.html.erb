@@ -2,4 +2,9 @@
 	<td><%= user.login %></td>
 	<td><%= link_to user.name, user %></td>
 	<td><%= link_to user.email, "mailto:#{user.email}" %></td>
+	<td>
+		<%= link_to user, method:"delete", class:"btn btn-danger", data: {confirm: "Are you sure?"} do%>
+  		<i class="fa fa-trash-o fa-lg"></i> Delete
+  		<% end  if current_user.admin?  && !current_user?(user) %>
+    </td>
 </tr>

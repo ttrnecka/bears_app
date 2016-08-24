@@ -4,12 +4,14 @@ tomas:
   name: Tomas Trnecka
   email: trnecka@gmail.com
   login: trnecka
+  roles: "A"
   password_digest: <%= User.digest('password') %>
   
 archer:
   name: Sterling Archer
   email: duchess@example.gov
   login: archer
+  roles: "U"
   password_digest: <%= User.digest('password') %>
   
 ad_user:

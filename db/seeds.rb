@@ -11,6 +11,7 @@ when "development"
   User.create!(name:  "Example User",
              email: "example@railstutorial.org",
              login: "example_user",
+             roles: "A",
              password:              "foobar",
              password_confirmation: "foobar")
 

@@ -5,6 +5,7 @@ class UserTest < ActiveSupport::TestCase
     @user = User.new(name: "Example User", email: "user@email.com", login: "user",
                      password: "foobar", password_confirmation: "foobar")
     @local_user = users(:tomas)
+    @nonadmin = users(:archer)
   end
   
   test "should be valid" do
@@ -132,7 +133,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 1, @called
   end
   
-  test "update_adauth_cfg updated Adauth config" do
+  test "update_adauth_cfg updated Adauth config" do    
     # entry adauth setting
     Adauth.configure do |c|
       c.domain = "domain"
@@ -166,5 +167,24 @@ class UserTest < ActiveSupport::TestCase
     AppConfig.set "ad_domain", old_domain
     AppConfig.set "ad_controller", old_server
     AppConfig.set "ad_ldap_base", old_base
+  end
+
+  test "User Roles hash" do
+    assert User::Roles
+    assert_equal "user", User::Roles["U"]
+    assert_equal "admin", User::Roles["A"]
+  end
+  
+  test "New User has only user role by default" do
+    assert_equal "U", @user.roles
+  end
+  
+  test "admin? method" do
+    assert @local_user.admin?
+  end
+  
+  test "full text roles" do
+    assert_equal "admin", @local_user.roles_to_s 
+    assert_equal "user", @nonadmin.roles_to_s 
   end
 end

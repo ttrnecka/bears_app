@@ -3,6 +3,11 @@ class User < ApplicationRecord
   
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   
+  Roles = {
+    "U" => "user",
+    "A" => "admin"
+  }
+  
   attr_accessor :remember_token
   
   before_save { login.downcase! }
@@ -20,6 +25,16 @@ class User < ApplicationRecord
   }
   
   AdauthSearchField = [:login, :login]
+  
+  # Returns boolean if user is admin
+  def admin?
+    roles.match(/A/)
+  end
+  
+  # Returns list of roles as string
+  def roles_to_s
+    roles.split("").map {|ch| Roles[ch]}.join(",")  
+  end
   
   # Remembers a user in the database for use in persistent sessions.
   def remember
