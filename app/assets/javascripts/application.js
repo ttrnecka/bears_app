@@ -11,10 +11,9 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery.turbolinks
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require bootstrap_sb_admin_base_v2
+//= require initializers
 //= require turbolinks
-//= require turbolinks-compatibility
 //= require_tree .

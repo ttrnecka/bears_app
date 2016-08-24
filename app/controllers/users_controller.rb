@@ -1,9 +1,13 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :update]
+  before_action :logged_in_user, only: [:edit, :update, :index]
   before_action :correct_user, only: [:edit, :update]
   
   before_action only: [:new,:create], if: -> { logged_in? } do |controller|
     redirect_to root_url
+  end
+  
+  def index
+    @users=User.all
   end
   
   def new

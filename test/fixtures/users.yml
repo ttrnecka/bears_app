@@ -11,3 +11,9 @@ archer:
   email: duchess@example.gov
   login: archer
   password_digest: <%= User.digest('password') %>
+  
+ad_user:
+  name: Ad Account
+  email: ad@domain.com
+  login: adaccount
+  password_digest: 

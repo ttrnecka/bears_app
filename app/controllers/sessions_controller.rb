@@ -7,7 +7,16 @@ class SessionsController < ApplicationController
   end
   
   def create
-    if @user = User.authenticate(params[:session][:login],params[:session][:password])
+    begin
+      @user = User.authenticate(params[:session][:login],params[:session][:password])
+    rescue Net::LDAP::Error => e
+      logger.fatal e
+      logger.fatal e.backtrace
+      @user = false
+      flash[:danger] = "There are problems with AD authentication, see logs for more details"
+      redirect_to login_url and return
+    end
+    if @user
       log_in @user
       params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)
       redirect_back_or root_path

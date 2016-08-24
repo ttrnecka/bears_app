@@ -4,6 +4,15 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   
   def setup
     @user = users(:tomas)
+    @old_domain = AppConfig.get "ad_domain"
+    @old_server = AppConfig.get "ad_controller"
+    @old_base = AppConfig.get "ad_ldap_base"
+  end
+  
+  def teardown
+    AppConfig.set "ad_domain", @old_domain
+    AppConfig.set "ad_controller", @old_server
+    AppConfig.set "ad_ldap_base", @old_base
   end
   
   test "login with invalid information" do
@@ -76,5 +85,17 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
     post signup_path
     assert_redirected_to root_url
+  end
+  
+  test "shows flash message when AD authentication does not work" do
+    #put test data
+    AppConfig.set "ad_domain", "test_domain"
+    AppConfig.set "ad_controller", "test_server"
+    AppConfig.set "ad_ldap_base", "test_base"
+    
+    log_in_as users(:ad_user)
+    assert_redirected_to login_url
+    follow_redirect!
+    assert_not flash.empty?
   end
 end
