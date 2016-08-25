@@ -34,6 +34,12 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
   
+  test "should not redirect edit when logged as admin" do
+    log_in_as(@user)
+    get edit_user_path(@other_user)
+    assert_template "users/edit"
+  end
+  
   test "should redirect update when logged as wrong user" do
     log_in_as(@other_user)
     patch user_path(@user), params: { user: { name: @user.name,
@@ -41,6 +47,16 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
                                               login: @user.login } }
     assert flash.empty?
     assert_redirected_to root_url
+  end
+  
+  test "should not redirect update when logged as admin" do
+    log_in_as(@user)
+    patch user_path(@other_user), params: { user: { name: @other_user.name,
+                                              email: @other_user.email,
+                                              login: @other_user.login } }
+    assert_redirected_to users_path
+    follow_redirect!
+    assert_not flash.empty?
   end
   
   test "should redirect index when not logged in" do

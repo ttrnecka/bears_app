@@ -8,10 +8,11 @@ document.addEventListener("turbolinks:load", ->
   	
   # metis menu
   $('#side-menu').metisMenu()
+  # section highligh
   url = window.location
   element = $('ul.nav a')
   .filter( -> 
-    return this.href == url.href
+    return url.href.match(this.href)
   )
   .addClass 'active'
   .parents 'ul'

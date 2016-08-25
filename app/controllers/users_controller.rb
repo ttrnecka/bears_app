@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :logged_in_user, only: [:edit, :update, :index, :destroy]
-  before_action :correct_user, only: [:edit, :update]
+  before_action :correct_user_or_admin, only: [:edit, :update]
   before_action :admin_user,:not_same_user, only: [:destroy]
   
   before_action only: [:new,:create], if: -> { logged_in? } do |controller|
@@ -36,7 +36,13 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(user_params)
       flash[:success] = "Profile updated"
-      redirect_to @user
+      # admin updates should be redirected to users unless admin updates himself
+      if current_user.admin? && current_user.id != @user.id
+        # user updates should be redirected to profile 
+        redirect_to users_path
+      else
+        redirect_to @user
+      end
     else
       render 'edit'
     end
@@ -63,9 +69,9 @@ class UsersController < ApplicationController
     end
     
     # Confirms the correct user.
-    def correct_user
+    def correct_user_or_admin
       @user = User.find(params[:id])
-      redirect_to(root_url) unless current_user?(@user)
+      redirect_to(root_url) unless current_user?(@user) || current_user.admin?
     end
     
     def admin_user
