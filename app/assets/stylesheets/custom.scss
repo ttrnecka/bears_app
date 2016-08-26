@@ -22,7 +22,7 @@ $gray-medium-light: #eaeaea;
 /* flash */
 
 .alert {
-  margin-top:20px;
+  margin:0px;
 }
 /* main */
 
@@ -30,6 +30,10 @@ $gray-medium-light: #eaeaea;
   @extend #page-wrapper;
   margin-left:20%;
   margin-right:20%;
+}
+
+.page-header {
+  margin:20px 0 10px;
 }
 
 /* forms */

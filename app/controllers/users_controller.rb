@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
   before_action :logged_in_user, only: [:edit, :update, :index, :destroy]
-  before_action :correct_user_or_admin, only: [:edit, :update]
-  before_action :admin_user,:not_same_user, only: [:destroy]
+  before_action :correct_user_or_admin, only: [:update]
+  before_action :correct_user, only: [:edit]
+  before_action :not_same_user, only: [:destroy]
+  before_action :admin_user, only: [:index, :destroy]
   
   before_action only: [:new,:create], if: -> { logged_in? } do |controller|
     redirect_to root_url
@@ -34,13 +36,15 @@ class UsersController < ApplicationController
   end
   
   def update
+    params.inspect
     if @user.update_attributes(user_params)
-      flash[:success] = "Profile updated"
       # admin updates should be redirected to users unless admin updates himself
       if current_user.admin? && current_user.id != @user.id
+        flash[:success] = "User #{@user.login} updated"
         # user updates should be redirected to profile 
         redirect_to users_path
       else
+        flash[:success] = "Profile updated"
         redirect_to @user
       end
     else
@@ -49,15 +53,19 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User deleted"
+    user = User.find(params[:id]).destroy
+    flash[:success] = "User #{user.login} deleted"
     redirect_to users_url
   end
   
   private
   
     def user_params
-      params.require(:user).permit(:name, :email, :login, :password, :password_confirmation)
+      if current_user && current_user.admin?
+        params.require(:user).permit(:name, :email, :login, :roles)
+      else
+        params.require(:user).permit(:name, :email, :login, :password, :password_confirmation)
+      end
     end
     
     def logged_in_user
@@ -69,6 +77,11 @@ class UsersController < ApplicationController
     end
     
     # Confirms the correct user.
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_url) unless current_user?(@user)
+    end
+    
     def correct_user_or_admin
       @user = User.find(params[:id])
       redirect_to(root_url) unless current_user?(@user) || current_user.admin?

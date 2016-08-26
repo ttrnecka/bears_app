@@ -1,11 +1,12 @@
 window.data_tables =
   users_table: null
-  
+
 document.addEventListener("turbolinks:load", ->
+  # user menu
   window.data_tables.users_table = $('#users_table').DataTable({
-  	info:"Users"
+    stateSave: true
   })
-  	
+  
   # metis menu
   $('#side-menu').metisMenu()
   # section highligh
@@ -23,6 +24,7 @@ document.addEventListener("turbolinks:load", ->
 )
 
 document.addEventListener("turbolinks:before-cache", ->
+  # destroy users_table to make sure the HTML does not duplicate
   window.data_tables.users_table.destroy() if $('#users_table_wrapper').length == 1
   return
 )

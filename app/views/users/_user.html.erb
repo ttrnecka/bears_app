@@ -2,13 +2,30 @@
 	<td><%= user.login %></td>
 	<td><%= link_to user.name, user %></td>
 	<td><%= link_to user.email, "mailto:#{user.email}" %></td>
+	<td><%= user.roles_to_s %></td>
 	<td>
-  		<% if current_user.admin?  && !current_user?(user) %>
+  		<% if !current_user?(user) %>
   		<div class="dropdown">
 		  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Actions <span class="caret"></span></button>
 		  <ul class="dropdown-menu">
-		  	<li><%= link_to "Delete",user, method:"delete", data: {confirm: "Are you sure?"} %></li>
-		    <li><%= link_to "Edit", edit_user_path(user) %></li>
+		    <% if user.admin? %>
+		    	<li>
+		    		<%= link_to  user_path(user,"user[roles]" => "U"), method:"patch" do %>
+		    			<i class="fa fa-angle-double-down fa-fw"></i> Demote to user
+		    		<% end %>
+		    	</li>
+		    <% else %>
+		    	<li>
+		    		<%= link_to  user_path(user,"user[roles]" => "A"), method:"patch" do %>
+		    			<i class="fa fa-angle-double-up fa-fw"></i> Promote to admin
+		    		<% end %>
+		    	</li>
+		    <% end %>
+		    <li>
+		    	<%= link_to user, method:"delete", data: {confirm: "Are you sure?"} do %>
+		    		<i class="fa fa-trash fa-fw"></i> Delete
+		    	<% end %>
+		    </li>
 		  </ul>
 		</div>
 		<% end %>

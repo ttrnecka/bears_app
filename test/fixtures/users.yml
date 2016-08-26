@@ -7,6 +7,13 @@ tomas:
   roles: "A"
   password_digest: <%= User.digest('password') %>
   
+admin:
+  name: Admin User
+  email: admin@gmail.com
+  login: admin
+  roles: "A"
+  password_digest: <%= User.digest('password') %>
+  
 archer:
   name: Sterling Archer
   email: duchess@example.gov
