@@ -18,6 +18,7 @@ when "development"
   99.times do |n|
     name  = Faker::Name.name
     login = Faker::Internet.user_name
+    next if User.find_by login: login
     email = "example-#{n+1}@railstutorial.org"
     password = "password"
     User.create!(name:  name,
@@ -26,4 +27,13 @@ when "development"
                  password:              password,
                  password_confirmation: password)
   end
+  # instances
+  i1=BearsInstance.create!(name:"VPC UK",comment:"VPC UK BEARS instance")
+  i2=BearsInstance.create!(name:"VPC Germany",comment:"VPC Germany BEARS instance")
+  
+  # datacenters
+  i1.data_centers.create!(name:"Wynyard",dc_code:"WYN")
+  i1.data_centers.create!(name:"Doxford",dc_code:"DXS")
+  i2.data_centers.create!(name:"E-Shelter",dc_code:"EDC")
+  i2.data_centers.create!(name:"Russelsheim",dc_code:"DEG")
 end

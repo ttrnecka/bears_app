@@ -6,7 +6,11 @@ class StaticPagesController < ApplicationController
   end
   
   def home
-    redirect_to login_path if !logged_in?
+    if !logged_in?
+      redirect_to login_path
+    else
+      @instances = BearsInstance.all
+    end
   end
   
   def news

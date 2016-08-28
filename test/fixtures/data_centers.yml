@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+wynyard:
+  name: Wynyard
+  dc_code: WYN
+  bears_instance: vpc_uk
+
+doxford:
+  name: Doxford
+  dc_code: DXS
+  bears_instance: vpc_uk
+
+eshelter:
+  name: E-Shelter
+  dc_code: EDC
+  bears_instance: vpc_germany
+
+russelsheim:
+  name: Russelsheim
+  dc_code: DEG
+  bears_instance: vpc_germany

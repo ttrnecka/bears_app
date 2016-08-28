@@ -1,0 +1,10 @@
+<% 
+	case params[:array_type]
+	when "3PAR"
+		provide(:title, '3PARs')
+	when "EVA"
+		provide(:title, 'EVAs')
+	else
+		provide(:title, 'Arrays')
+	end 
+%>

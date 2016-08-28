@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  array_id: 1
+  array_type: MyString
+
+two:
+  array_id: 1
+  array_type: MyString

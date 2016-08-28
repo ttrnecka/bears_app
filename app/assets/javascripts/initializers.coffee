@@ -12,8 +12,8 @@ document.addEventListener("turbolinks:load", ->
   # section highligh
   url = window.location
   element = $('ul.nav a')
-  .filter( -> 
-    return url.href.match(this.href)
+  .filter( ->
+    return url.href == this.href
   )
   .addClass 'active'
   .parents 'ul'

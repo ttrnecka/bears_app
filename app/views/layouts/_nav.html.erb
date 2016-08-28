@@ -80,7 +80,38 @@
 	                <!-- /input-group -->
 	            </li>
 	            <li>
-	            	<a href="#" id="menu_dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+	            	<%= link_to root_path, id:"menu_dashboard" do %>
+	            		<i class="fa fa-dashboard fa-fw"></i> Dashboard
+	            	<% end %>
+	            </li>
+	            <li>
+	            	<%= link_to "#", id:"menu_resources" do %>
+	            		<i class="fa fa-cloud fa-fw"></i> Resources<span class="fa arrow"></span>
+	            	<% end %>
+	            	<ul class="nav nav-second-level collapse">
+	                	<li>
+	                    	<%= link_to "#", id:"menu_arrays" do %>
+	                        	<i class="fa fa-bars fa-fw"></i> Arrays<span class="fa arrow">
+	                        <% end %>
+	                        <ul class="nav nav-third-level collapse">
+		                    	<li>
+			                    	<%= link_to storage_arrays_path, id:"menu_arrays_all" do %>
+			                    		<i class="fa fa-angle-right fa-fw"></i> ALL
+			                    	<% end %>
+			                    </li>
+			                	<li>
+			                		<%= link_to storage_arrays_path(array_type: "3PAR"), id:"menu_arrays_3par" do %>
+			                    		<i class="fa fa-angle-right fa-fw"></i> 3PAR
+			                    	<% end %>
+			                    </li>
+			                    <li>
+			                    	<%= link_to storage_arrays_path(array_type: "EVA"), id:"menu_arrays_eva" do %>
+			                    		<i class="fa fa-angle-right fa-fw"></i> EVA
+			                    	<% end %>
+			                    </li>
+			                </ul>
+	                    </li>
+	                </ul>
 	            </li>
 	             <li>
 	                <a href="#" id="menu_configuration"><i class="fa fa-wrench fa-fw"></i> Configuration<span class="fa arrow"></span></a>
