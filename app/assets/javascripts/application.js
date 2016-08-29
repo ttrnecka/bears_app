@@ -13,7 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap-sprockets
-//= require bootstrap_sb_admin_base_v2
+//= require jquery.flot
+//= require jquery.flot.resize
+//= require jquery.flot.pie
 //= require initializers
 //= require turbolinks
 //= require_tree .

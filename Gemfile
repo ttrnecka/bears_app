@@ -30,9 +30,11 @@ gem 'bcrypt', '3.1.11'
 # gem 'capistrano-rails', group: :development
 
 gem 'bootstrap-sass', '3.3.6'
+gem 'font-awesome-rails', '~> 4.6', '>= 4.6.3.1'
+gem 'flot-rails', '~> 0.0.7'
 
 # sb admin 2 bootstrap theme
-gem 'bootstrap_sb_admin_base_v2'
+#gem 'bootstrap_sb_admin_base_v2'
 
 gem 'adauth', '~> 2.0'
 
