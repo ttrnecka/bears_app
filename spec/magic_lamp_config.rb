@@ -2,7 +2,7 @@ require "database_cleaner"
 
 MagicLamp.configure do |config|
 
-  DatabaseCleaner.strategy = :transaction
+  DatabaseCleaner.strategy = :truncation
 
   config.before_each do
     DatabaseCleaner.start

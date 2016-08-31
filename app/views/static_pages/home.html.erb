@@ -17,13 +17,15 @@
 </div>
 
 <script>
-	var data = [
-	<% @instances.all.each do |inst| %>
-      {
-        label: "<%= inst.name %>",
-        data: "<%= inst.data_centers.inject(0) {|sum,x| sum+x.capacity_raw }%>"
-      },
+	<% if !@instances.empty? %>
+		var data = [
+		<% @instances.all.each do |inst| %>
+	      {
+	        label: "<%= inst.name %>",
+	        data: "<%= inst.data_centers.inject(0) {|sum,x| sum+x.capacity_raw }%>"
+	      },
+	    <% end %>
+	    ]
+	    window.plotter.pie_chart($('#chart_capacity'),data);
     <% end %>
-    ]
-    window.plotter.pie_chart($('#chart_capacity'),data);
 </script>
