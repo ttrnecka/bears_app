@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  mount MagicLamp::Genie, at: "/magic_lamp" if defined?(MagicLamp)
+  
   get 'sessions/new'
 
   root 'static_pages#home'
