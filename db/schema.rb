@@ -34,7 +34,6 @@ ActiveRecord::Schema.define(version: 20160828083727) do
     t.string   "array_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["array_id", "array_type"], name: "index_storage_arrays_on_array_id_and_array_type"
   end
 
   create_table "users", force: :cascade do |t|

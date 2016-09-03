@@ -13,9 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap-sprockets
+//= require angular
 //= require jquery.flot
 //= require jquery.flot.resize
 //= require jquery.flot.pie
-//= require initializers
 //= require turbolinks
 //= require_tree .

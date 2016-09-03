@@ -1,31 +1,19 @@
 <% provide(:title, 'Dashboard') %>
-<div class="row">
-	<% if !@instances.empty? %>
-	<div class="col-lg-6">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				Capacity Chart
-			</div>
-			<div class="panel-body">
-				<div class="flot-chart">
-					<div class="flot-chart-content" id="chart_capacity"></div>
+<div ng-controller="HomePageCtrl" ng-init="initialize(<%= @instances.to_json %>)">
+	<div class="row">
+		<% if !@instances.empty? %>
+		<div class="col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Capacity Chart
+				</div>
+				<div class="panel-body">
+					<div class="flot-chart">
+						<div class="flot-chart-content" id="chart_capacity"></div>
+					</div>
 				</div>
 			</div>
 		</div>
+		<% end %>
 	</div>
-	<% end %>
 </div>
-
-<script>
-	<% if !@instances.empty? %>
-		var data = [
-		<% @instances.all.each do |inst| %>
-	      {
-	        label: "<%= inst.name %>",
-	        data: "<%= inst.data_centers.inject(0) {|sum,x| sum+x.capacity_raw }%>"
-	      },
-	    <% end %>
-	    ]
-	    window.plotter.pie_chart($('#chart_capacity'),data);
-    <% end %>
-</script>

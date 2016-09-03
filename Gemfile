@@ -32,6 +32,7 @@ gem 'bcrypt', '3.1.11'
 gem 'bootstrap-sass', '3.3.6'
 gem 'font-awesome-rails', '~> 4.6', '>= 4.6.3.1'
 gem 'flot-rails', '~> 0.0.7'
+gem 'angularjs-rails'
 
 # sb admin 2 bootstrap theme
 #gem 'bootstrap_sb_admin_base_v2'
@@ -45,6 +46,7 @@ group :development, :test do
   gem 'byebug'
   gem "teaspoon-jasmine"
   gem "magic_lamp"
+  gem 'protractor-rails'
 end
 
 

@@ -9,7 +9,7 @@ class StaticPagesController < ApplicationController
     if !logged_in?
       redirect_to login_path
     else
-      @instances = BearsInstance.all
+      @instances = BearsInstance.all.map {|i| i.capacity_data }
     end
   end
   

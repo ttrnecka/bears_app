@@ -41,6 +41,7 @@ GEM
     adauth (2.0.5)
       expects (~> 0.0.2)
       net-ldap
+    angularjs-rails (1.5.6)
     ansi (1.5.0)
     arel (7.1.1)
     autoprefixer-rails (6.4.0.2)
@@ -59,6 +60,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    colorize (0.8.1)
     concurrent-ruby (1.0.2)
     database_cleaner (1.5.3)
     debug_inspector (0.0.2)
@@ -132,6 +134,9 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     pkg-config (1.1.7)
+    protractor-rails (0.0.19)
+      colorize
+      railties
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -220,6 +225,7 @@ PLATFORMS
 
 DEPENDENCIES
   adauth (~> 2.0)
+  angularjs-rails
   bcrypt (= 3.1.11)
   bootstrap-sass (= 3.3.6)
   byebug
@@ -236,6 +242,7 @@ DEPENDENCIES
   listen (= 3.0.8)
   magic_lamp
   minitest-reporters (= 1.1.9)
+  protractor-rails
   puma (~> 3.0)
   rails (~> 5.0.0)
   rails-controller-testing (= 0.1.1)
