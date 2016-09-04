@@ -1,30 +1,62 @@
-window.data_tables =
-  users_table: null
+window.bearsApp =
+  data_tables:
+    users_table: null
+  utils:
+    locationHref: ()->
+      window.location.href
+    plotter:
+      pie_chart: (jquery_selector,data) ->
+        plotObj = $.plot($("#chart_capacity"), data, {
+          series:
+            pie: 
+              show: true
+          grid:
+            hoverable: true
+            clickable: true
+          tooltip: true,
+          tooltipOpts:
+            content: "%p.0%, %s", # show percentages, rounding to 2 decimal places
+            shifts:
+              x: 20,
+              y: 0
+            defaultTheme: false
+        })
+        return plotObj
+
+app = window.bearsApp
+
+metis_menu =
+  highlightSection: ()->
+    element = $('ul.nav a')
+      .filter ->
+        return app.utils.locationHref() == this.href
+      .addClass 'active'
+      .parents 'ul'
+      .addClass 'in'
+    element.addClass 'active' if element.is 'li'
 
 document.addEventListener("turbolinks:load", ->
+  #angular
+  angular.bootstrap document.body, ['bearsApp']
+  
   # user menu
-  window.data_tables.users_table = $('#users_table').DataTable({
+  app.data_tables.users_table = $('#users_table').DataTable({
     stateSave: true
   })
+  $('#users_table').show()
   
   # metis menu
   $('#side-menu').metisMenu()
   # section highligh
-  url = window.location
-  element = $('ul.nav a')
-  .filter( ->
-    return url.href == this.href
-  )
-  .addClass 'active'
-  .parents 'ul'
-  .addClass 'in'
+  metis_menu.highlightSection() 
   
-  element.addClass 'active' if element.is 'li' 
   return
 )
 
 document.addEventListener("turbolinks:before-cache", ->
   # destroy users_table to make sure the HTML does not duplicate
-  window.data_tables.users_table.destroy() if $('#users_table_wrapper').length == 1
+  if $('#users_table_wrapper').size() == 1
+    $('#users_table').hide()
+    app.data_tables.users_table.destroy()
   return
 )

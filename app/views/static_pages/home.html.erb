@@ -1,8 +1,7 @@
 <% provide(:title, 'Dashboard') %>
 <div ng-controller="HomePageCtrl" ng-init="initialize(<%= @instances.to_json %>)">
 	<div class="row">
-		<% if !@instances.empty? %>
-		<div class="col-lg-6">
+		<div class="col-lg-6" ng-show="capacity_chart_exist">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Capacity Chart
@@ -14,6 +13,5 @@
 				</div>
 			</div>
 		</div>
-		<% end %>
 	</div>
 </div>
