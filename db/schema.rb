@@ -30,11 +30,11 @@ ActiveRecord::Schema.define(version: 20160905132608) do
   end
 
   create_table "resource_storage_arrays", force: :cascade do |t|
-    t.integer  "array_id"
-    t.string   "array_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["array_id", "array_type"], name: "index_resource_storage_arrays_on_array_id_and_array_type"
+    t.integer  "instance_id"
+    t.string   "instance_type"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["instance_id", "instance_type"], name: "index_resource_storage_arrays_on_instance_id_and_instance_type"
   end
 
   create_table "users", force: :cascade do |t|
