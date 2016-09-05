@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160828083727) do
+ActiveRecord::Schema.define(version: 20160905132608) do
 
   create_table "bears_instances", force: :cascade do |t|
     t.string   "name"
@@ -29,11 +29,12 @@ ActiveRecord::Schema.define(version: 20160828083727) do
     t.index ["dc_code"], name: "index_data_centers_on_dc_code", unique: true
   end
 
-  create_table "storage_arrays", force: :cascade do |t|
+  create_table "resource_storage_arrays", force: :cascade do |t|
     t.integer  "array_id"
     t.string   "array_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["array_id", "array_type"], name: "index_resource_storage_arrays_on_array_id_and_array_type"
   end
 
   create_table "users", force: :cascade do |t|
