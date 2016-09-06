@@ -18,7 +18,17 @@ module Resource::Storage
       get resource_storage_arrays_path
       assert_template "resource/storage/arrays/index"
       assert flash.empty?
-      assert_select "title", full_title("Arrays")
+      assert_select "title", full_title("All Arrays")
     end
+    
+    test "should get proper subpages" do
+      log_in_as(@user)
+      get resource_storage_arrays_path(array_type:"A3Par")
+      assert_select "title", full_title("3PAR Arrays")
+      get resource_storage_arrays_path(array_type:"Eva")
+      assert_select "title", full_title("EVA Arrays")
+    end
+    
+    
   end
 end

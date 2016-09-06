@@ -28,8 +28,8 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_select "a[id=?][href=?]", "menu_resources","#", count: 1, title: "Resources"
     assert_select "a[id=?]", "menu_arrays", count: 1, title: "Arrays"
     assert_select "a[id=?][href=?]", "menu_arrays_all",resource_storage_arrays_path, count: 1, title: "ALL"
-    assert_select "a[id=?][href=?]", "menu_arrays_3par",resource_storage_arrays_path(array_type: "3PAR"), count: 1, title: "3PAR"
-    assert_select "a[id=?][href=?]", "menu_arrays_eva",resource_storage_arrays_path(array_type: "EVA"), count: 1, title: "EVA"
+    assert_select "a[id=?][href=?]", "menu_arrays_3par",resource_storage_arrays_path(array_type: "A3Par"), count: 1, title: "3PAR"
+    assert_select "a[id=?][href=?]", "menu_arrays_eva",resource_storage_arrays_path(array_type: "Eva"), count: 1, title: "EVA"
     get about_path
     assert_select "title", full_title("About")
     get help_path
@@ -52,8 +52,8 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_select "a[id=?][href=?]", "menu_resources","#", count: 0, title: "Resources"
     assert_select "a[id=?]", "menu_arrays", count: 0, title: "Arrays"
     assert_select "a[id=?][href=?]", "menu_arrays_all",resource_storage_arrays_path, count: 0, title: "ALL"
-    assert_select "a[id=?][href=?]", "menu_arrays_3par",resource_storage_arrays_path(array_type: "3PAR"), count: 0, title: "3PAR"
-    assert_select "a[id=?][href=?]", "menu_arrays_eva",resource_storage_arrays_path(array_type: "EVA"), count: 0, title: "EVA"
+    assert_select "a[id=?][href=?]", "menu_arrays_3par",resource_storage_arrays_path(array_type: "A3Par"), count: 0, title: "3PAR"
+    assert_select "a[id=?][href=?]", "menu_arrays_eva",resource_storage_arrays_path(array_type: "Eva"), count: 0, title: "EVA"
     
   end
 end

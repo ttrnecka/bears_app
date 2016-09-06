@@ -1,0 +1,40 @@
+# == Schema Information
+#
+# Table name: resource_storage_a3_par_arrays
+#
+#  id              :integer          not null, primary key
+#  name            :string
+#  model           :string
+#  serial          :string
+#  firmware        :string
+#  space_total     :integer
+#  space_available :integer
+#  space_used      :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  index_resource_storage_a3_par_arrays_on_name    (name)
+#  index_resource_storage_a3_par_arrays_on_serial  (serial) UNIQUE
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+wyn3par1:
+  name: WYN3PAR1
+  model: "8440"
+  serial: "14567834"
+  firmware: "3.2.2 MU2"
+  space_total: 1000
+  space_available: 700
+  space_used: 300
+
+wyn3par2:
+  name: WYN3PAR2
+  model: "7400"
+  serial: "MX3459983"
+  firmware: "3.2.1 MU5"
+  space_total: 400
+  space_available: 100
+  space_used: 100

@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id              :integer          not null, primary key
+#  name            :string
+#  email           :string
+#  login           :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  password_digest :string
+#  remember_digest :string
+#  roles           :string(2)        default("U")
+#
+# Indexes
+#
+#  index_users_on_login  (login) UNIQUE
+#
+
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase

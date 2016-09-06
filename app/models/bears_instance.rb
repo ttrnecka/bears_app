@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: bears_instances
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  comment    :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_bears_instances_on_name  (name) UNIQUE
+#
+
 class BearsInstance < ApplicationRecord
    validates :name, uniqueness: true
    

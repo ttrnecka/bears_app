@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160905132608) do
+ActiveRecord::Schema.define(version: 20160906192145) do
 
   create_table "bears_instances", force: :cascade do |t|
     t.string   "name"
@@ -27,6 +27,20 @@ ActiveRecord::Schema.define(version: 20160905132608) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.index ["dc_code"], name: "index_data_centers_on_dc_code", unique: true
+  end
+
+  create_table "resource_storage_a3_par_arrays", force: :cascade do |t|
+    t.string   "name"
+    t.string   "model"
+    t.string   "serial"
+    t.string   "firmware"
+    t.integer  "space_total"
+    t.integer  "space_available"
+    t.integer  "space_used"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["name"], name: "index_resource_storage_a3_par_arrays_on_name"
+    t.index ["serial"], name: "index_resource_storage_a3_par_arrays_on_serial", unique: true
   end
 
   create_table "resource_storage_arrays", force: :cascade do |t|

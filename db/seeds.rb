@@ -36,4 +36,25 @@ when "development"
   i1.data_centers.create!(name:"Doxford",dc_code:"DXS")
   i2.data_centers.create!(name:"E-Shelter",dc_code:"EDC")
   i2.data_centers.create!(name:"Russelsheim",dc_code:"DEG")
+  
+  #3PARs
+  
+  10.times do |n|
+    name = "WYN3PAR#{n}"
+    model = ["V400", "7400", "8440"][Random.rand(3)]
+    serial =  Random.rand(999999999).to_s
+    firmware = ["3.2.1 MU5", "3.2.2 MU2", "3.1.3 MU3"][Random.rand(3)]
+    space_total = Random.rand(500..1000)
+    space_available = Random.rand(0..500)
+    space_used = space_total - space_available
+    Resource::Storage::A3Par::Array.create!(
+      name:name,
+      model:model,
+      serial:serial,
+      firmware:firmware,
+      space_total:space_total,
+      space_available:space_available,
+      space_used:space_used
+    )
+  end
 end

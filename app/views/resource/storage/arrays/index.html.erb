@@ -1,10 +1,27 @@
 <% 
 	case params[:array_type]
-	when "3PAR"
-		provide(:title, '3PARs')
-	when "EVA"
-		provide(:title, 'EVAs')
+	when "A3Par"
+		provide(:title, '3PAR Arrays')
+	when "Eva"
+		provide(:title, 'EVA Arrays')
 	else
-		provide(:title, 'Arrays')
+		provide(:title, 'All Arrays')
 	end 
 %>
+
+<table id="arrays_table" class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+	<thead>
+    	<tr>
+        	<th>Name</th>
+            <th>Serial</th>
+            <th>Model</th>
+            <th>Firmware</th>
+            <th>Total Space</th>
+            <th>Used Space</th>
+            <th>Available Space</th>
+        </tr>
+	</thead>
+	<tbody>
+		<%= render @arrays %>
+	</tbody>
+</table>
