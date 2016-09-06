@@ -1,6 +1,6 @@
 (->
   HomePageCtrl = ($scope,$window) ->
-     plotter = $window.bearsApp.utils.plotter
+     plotter = $window.FlotPlotter
      
      detailed_data = [
        {
@@ -19,14 +19,14 @@
      $scope.charts = {}
      $scope.initialize = (instances_data) ->	
        $scope.charts.capacity = plotter.pie_chart($('#chart_capacity'),instances_data) if instances_data.length>0
-       $scope.charts.capacity = plotter.stack_chart($('#chart_capacity_detailed'),detailed_data)
+       $scope.charts.capacity_detailed = plotter.stack_chart($('#chart_capacity_detailed'),detailed_data)
        return
      
      $scope.capacity_chart_exist = () ->
        if $scope.charts.capacity then true else false
      
      $scope.capacity_chart_detailed_exist = () ->
-       true
+       if $scope.charts.capacity_detailed then true else false
          
      return
    

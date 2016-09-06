@@ -52,6 +52,12 @@ $gray-medium-light: #eaeaea;
   }
 }
 
+/* flot */
+.flot-chart {
+  .legendLabel {
+    padding-left:5px;
+  }
+}
 /* miscellaneous */
 
 .debug_dump {

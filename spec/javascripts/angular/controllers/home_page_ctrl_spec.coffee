@@ -8,9 +8,10 @@ describe 'HomePageCtrl', ()->
   beforeEach inject (_$controller_,_$window_)->
     $controller = _$controller_;
     $window = _$window_;
-    plotter = $window.bearsApp.utils.plotter
+    plotter = $window.FlotPlotter
     
     spyOn(plotter,'pie_chart').and.returnValue({obj:true})
+    spyOn(plotter,'stack_chart').and.returnValue({obj:true})
     return
     
   describe '$scope.capacity_chart_exist', ()->
@@ -36,4 +37,3 @@ describe 'HomePageCtrl', ()->
         .not.toHaveBeenCalled()
       expect $scope.capacity_chart_exist()
         .toEqual(false)
-  
