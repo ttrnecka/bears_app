@@ -21,7 +21,9 @@ class BearsInstance < ApplicationRecord
    def capacity_data
      {
        label: name,
-       data: data_centers.inject(0) {|sum,x| sum+x.capacity_raw }
+       data_total: data_centers.inject(0) {|sum,x| sum+x.space_total },
+       data_available: data_centers.inject(0) {|sum,x| sum+x.space_available },
+       data_used: data_centers.inject(0) {|sum,x| sum+x.space_used }
      }
    end
 end

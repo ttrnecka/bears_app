@@ -142,14 +142,9 @@ module Resource::Storage
       assert @wyn3par1_ab.respond_to? :data_center
     end
     
-    test "api - data_center calls instance data_center" do
-      @called = 0
-      assert_difference '@called', 1 do
-        @wyn3par1_ab.instance.stub :data_center, -> { @called+=1; } do
-          @wyn3par1_ab.data_center
-        end
-        assert @wyn3par1_ab.instance.data_center, @wyn3par1_ab.data_center
-      end
+    test "should belong to datacenter" do
+      t = Array.reflect_on_association(:data_center)
+      assert_equal :belongs_to, t.macro
     end
   end
 end

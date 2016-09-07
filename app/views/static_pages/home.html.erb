@@ -1,26 +1,40 @@
 <% provide(:title, 'Dashboard') %>
-<div ng-controller="HomePageCtrl as hp" ng-init="hp.load_data(<%= @instances.to_json %>)">
+<div ng-controller="HomePageCtrl as hp" ng-init="hp.load_data(<%= @graph_data.to_json %>)">
 	<div class="row">
-		<div class="col-lg-6" ng-show="hp.capacity_chart_exist">
+		<div class="col-lg-6" ng-show="hp.capacity_distribution_chart_exist">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Capacity Chart
+					Capacity Distribution Chart
 				</div>
 				<div class="panel-body">
 					<div class="flot-chart">
-						<div class="flot-chart-content" id="chart_capacity"></div>
+						<div class="flot-chart-content" id="chart_capacity_distribution"></div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-6" ng-show="hp.capacity_chart_detailed_exist">
+		<div class="col-lg-6" ng-show="hp.capacity_usage_chart_exist">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Capacity Chart Detailed
+					Capacity Usage Chart
 				</div>
 				<div class="panel-body">
 					<div class="flot-chart">
-						<div class="flot-chart-content" id="chart_capacity_detailed"></div>
+						<div class="flot-chart-content" id="chart_capacity_usage"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12" ng-show="hp.capacity_usage_array_chart_exist">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Array Capacity Usage Chart
+				</div>
+				<div class="panel-body">
+					<div class="flot-chart">
+						<div class="flot-chart-content" id="chart_capacity_usage_array"></div>
 					</div>
 				</div>
 			</div>

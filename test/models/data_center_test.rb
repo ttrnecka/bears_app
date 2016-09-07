@@ -34,4 +34,24 @@ class DataCenterTest < ActiveSupport::TestCase
   test "should have bears instance" do
     assert @dc.bears_instance
   end
+  
+  test "should have many arrays" do
+    t = DataCenter.reflect_on_association(:arrays)
+    assert_equal :has_many, t.macro
+  end
+  
+  test "space_total should return proper numner" do
+    assert_kind_of Integer, @wynyard.space_total
+    assert_equal @wynyard.arrays.inject(0) {|sum, a| sum+a.space_total }, @wynyard.space_total 
+  end
+  
+  test "space_used should return proper numner" do
+    assert_kind_of Integer, @wynyard.space_used
+    assert_equal @wynyard.arrays.inject(0) {|sum, a| sum+a.space_used }, @wynyard.space_used 
+  end
+  
+  test "space_available should return proper numner" do
+    assert_kind_of Integer, @wynyard.space_available
+    assert_equal @wynyard.arrays.inject(0) {|sum, a| sum+a.space_available }, @wynyard.space_available 
+  end
 end

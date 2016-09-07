@@ -9,7 +9,9 @@ class StaticPagesController < ApplicationController
     if !logged_in?
       redirect_to login_path
     else
-      @instances = BearsInstance.all.map {|i| i.capacity_data }
+      @graph_data = {}
+      @graph_data[:instances] =  BearsInstance.all.map {|i| i.capacity_data }
+      @graph_data[:arrays] =  Resource::Storage::Array.all.map {|a| a.capacity_data }
     end
   end
   

@@ -80,15 +80,16 @@ module Resource::Storage::A3Par
       assert_not @array.valid?
     end
     
-    test "should respond to abstract_array" do
-      assert @wyn3par1.respond_to? :abstract_array
-      assert_equal "Resource::Storage::Array", @wyn3par1.abstract_array.class.to_s
+    test "should has_one abstract_array" do
+      t = Array.reflect_on_association(:abstract_array)
+      assert_equal :has_one, t.macro
     end
     
-    test "should create abstract_array upon creation" do
+    test "should create abstract_array upon creation with the same data_center" do
       assert_nil @array.abstract_array
       @array.save
-      refute_nil @array.abstract_array
+      assert @array.abstract_array.persisted?
+      assert_equal @array.data_center, @array.abstract_array.data_center
     end
     
     test "should return array family_name" do

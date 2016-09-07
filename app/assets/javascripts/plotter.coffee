@@ -19,7 +19,7 @@ class Plotter
       tooltipOpts:
         content: "%p.0%, %n TB, %s", # show percentages, rounding to 2 decimal places
     }
-    merged_options = $.extend({},default_options,chart_defaults,options)
+    merged_options = $.extend(true,{},default_options,chart_defaults,options)
     return $.plot(jquery_selector, data, merged_options)
     
   stack_chart: (jquery_selector,data,options = {}) ->
@@ -28,16 +28,17 @@ class Plotter
         stack: true
         bars:
           show: true
-          barWidth: 1 
-      xaxis: 
-        ticks: [[1.5, "UK"],[3,"Germany"]]
+          barWidth: 0.9
+      xaxis:
+        tickLength:0
+        min:0
       yaxis:
         tickFormatter: (val, axis) ->
           return val + " TB"
       tooltipOpts:
         content: "%y TB, %s"
     }
-    merged_options = $.extend({},default_options,chart_defaults,options)
+    merged_options = $.extend(true,{},default_options,chart_defaults,options)
     return $.plot(jquery_selector, data, merged_options)
     
 window.FlotPlotter = new Plotter()

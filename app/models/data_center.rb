@@ -15,20 +15,20 @@
 #
 
 class DataCenter < ApplicationRecord
-  validates :dc_code, uniqueness: true
-
+  validates :dc_code, uniqueness: true 
+  
+  has_many :arrays, class_name: "Resource::Storage::Array"
   belongs_to :bears_instance
   
-  # testing graphs
-  def capacity_raw
-    @capacity_raw ||= Random.rand(1000)
+  def space_total
+    arrays.inject(0) {|sum,x| sum+x.space_total}
   end
   
-  def capacity_raw_free
-    @capacity_raw_free ||= Random.rand(capacity_raw)
+  def space_used
+    arrays.inject(0) {|sum,x| sum+x.space_used}
   end
   
-  def capacity_raw_used
-    capacity_raw - capacity_raw_free
+  def space_available
+    arrays.inject(0) {|sum,x| sum+x.space_available}
   end
 end

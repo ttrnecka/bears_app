@@ -32,4 +32,14 @@ class BearsInstanceTest < ActiveSupport::TestCase
   test "should have data_centers" do
     assert @instance.data_centers
   end
+  
+  test "capacity_data should have label" do
+    refute_nil @instance.capacity_data[:label]
+  end
+  
+  test "capacity_data should have data and be numeric" do
+    data = @instance.capacity_data[:data]
+    refute_nil data
+    assert_kind_of Integer, data
+  end
 end

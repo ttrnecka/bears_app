@@ -40,7 +40,7 @@ module Resource::Storage::A3Par
     belongs_to :data_center
     
     after_create do 
-      self.create_abstract_array
+      self.create_abstract_array(data_center:data_center)
     end
     
     # API

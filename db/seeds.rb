@@ -40,7 +40,7 @@ when "development"
   #3PARs
   
   10.times do |n|
-    name = "WYN3PAR#{n}"
+    name = "WYN3PAR#{n+1}"
     model = ["V400", "7400", "8440"][Random.rand(3)]
     serial =  Random.rand(999999999).to_s
     firmware = ["3.2.1 MU5", "3.2.2 MU2", "3.1.3 MU3"][Random.rand(3)]

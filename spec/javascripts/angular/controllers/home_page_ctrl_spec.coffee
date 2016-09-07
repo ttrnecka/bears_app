@@ -14,18 +14,32 @@ describe 'HomePageCtrl', ()->
     spyOn(plotter,'stack_chart').and.returnValue({obj:true})
     return
     
-  describe 'ctrl.capacity_chart_exist', ()->
+  describe 'ctrl.capacity_distribution_chart_exist', ()->
     it 'returns true if instances data is not empty', ()->
       controller = $controller 'HomePageCtrl', { $window: $window }
-      controller.load_data [
-      	{
-      		label:"instance1",
-      		data:100
-      	}
-      ]
+      controller.load_data {
+      	  instances: [
+      	    {
+      	      label:"instance1"
+      	      data_total:100
+      	      data_used:50
+      	      data_available:50
+      	    }
+      	  ]
+      	  arrays: [
+      	    {
+      	      label:"array1"
+      	      data_total:100
+      	      data_used:50
+      	      data_available:50
+      	    }
+      	  ]
+      }
       expect plotter.pie_chart
         .toHaveBeenCalled()
-      expect controller.capacity_chart_exist()
+      expect plotter.stack_chart
+        .toHaveBeenCalled()
+      expect controller.capacity_distribution_chart_exist()
         .toEqual(true)
     
     it 'returns false if instances data is empty', ()->
@@ -33,5 +47,7 @@ describe 'HomePageCtrl', ()->
       controller.load_data []
       expect plotter.pie_chart
         .not.toHaveBeenCalled()
-      expect controller.capacity_chart_exist()
+      expect plotter.stack_chart
+        .not.toHaveBeenCalled()
+      expect controller.capacity_distribution_chart_exist()
         .toEqual(false)
