@@ -1,2 +1,1 @@
-angular
-  .module("bearsApp",[])
+@bearsNg = angular.module("bearsApp",[])

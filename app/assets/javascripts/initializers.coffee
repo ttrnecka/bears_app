@@ -1,7 +1,4 @@
 window.bearsApp =
-  data_tables:
-    users_table: null
-    arrays_table: null
   utils:
     locationHref: ()->
       window.location.href
@@ -22,36 +19,10 @@ document.addEventListener("turbolinks:load", ->
   #angular
   angular.bootstrap document.body, ['bearsApp']
   
-  # user menu
-  app.data_tables.users_table = $('#users_table').DataTable({
-    stateSave: true
-  })
-  $('#users_table').show()
-  
-  # arrays table
-  app.data_tables.arrays_table = $('#arrays_table').DataTable({
-    stateSave: true
-  })
-  $('#arrays_table').show()
-  
-  
   # metis menu
   $('#side-menu').metisMenu()
   # section highligh
   metis_menu.highlightSection() 
   
-  return
-)
-
-document.addEventListener("turbolinks:before-cache", ->
-  # destroy users_table to make sure the HTML does not duplicate
-  if $('#users_table_wrapper').size() == 1
-    $('#users_table').hide()
-    app.data_tables.users_table.destroy()
-  
-  # destroy arrays_table to make sure the HTML does not duplicate
-  if $('#arrays_table_wrapper').size() == 1
-    $('#arrays_table').hide()
-    app.data_tables.arrays_table.destroy() 
   return
 )

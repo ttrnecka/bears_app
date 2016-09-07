@@ -8,20 +8,22 @@
 		provide(:title, 'All Arrays')
 	end 
 %>
-
-<table id="arrays_table" class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
-	<thead>
-    	<tr>
-        	<th>Name</th>
-            <th>Serial</th>
-            <th>Model</th>
-            <th>Firmware</th>
-            <th>Total Space</th>
-            <th>Used Space</th>
-            <th>Available Space</th>
-        </tr>
-	</thead>
-	<tbody>
-		<%= render @arrays %>
-	</tbody>
-</table>
+<bears-data-table table="arrays_table">
+	<table id="arrays_table" class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+		<thead>
+	    	<tr>
+	        	<th>Name</th>
+	        	<th>Data Center</th>
+	            <th>Serial</th>
+	            <th>Model</th>
+	            <th>Firmware</th>
+	            <th>Total Space</th>
+	            <th>Used Space</th>
+	            <th>Available Space</th>
+	        </tr>
+		</thead>
+		<tbody>
+			<%= render @arrays %>
+		</tbody>
+	</table>
+</bears-data-table>

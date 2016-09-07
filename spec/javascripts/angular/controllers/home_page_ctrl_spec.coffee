@@ -14,11 +14,10 @@ describe 'HomePageCtrl', ()->
     spyOn(plotter,'stack_chart').and.returnValue({obj:true})
     return
     
-  describe '$scope.capacity_chart_exist', ()->
+  describe 'ctrl.capacity_chart_exist', ()->
     it 'returns true if instances data is not empty', ()->
-      $scope = {};
-      controller = $controller 'HomePageCtrl', { $scope: $scope }
-      $scope.initialize [
+      controller = $controller 'HomePageCtrl', { $window: $window }
+      controller.load_data [
       	{
       		label:"instance1",
       		data:100
@@ -26,14 +25,13 @@ describe 'HomePageCtrl', ()->
       ]
       expect plotter.pie_chart
         .toHaveBeenCalled()
-      expect $scope.capacity_chart_exist()
+      expect controller.capacity_chart_exist()
         .toEqual(true)
     
     it 'returns false if instances data is empty', ()->
-      $scope = {}
-      controller = $controller 'HomePageCtrl', { $scope: $scope, $window: $window }
-      $scope.initialize []
+      controller = $controller 'HomePageCtrl', { $window: $window }
+      controller.load_data []
       expect plotter.pie_chart
         .not.toHaveBeenCalled()
-      expect $scope.capacity_chart_exist()
+      expect controller.capacity_chart_exist()
         .toEqual(false)

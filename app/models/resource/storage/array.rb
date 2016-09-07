@@ -22,33 +22,16 @@ module Resource::Storage
     belongs_to :instance, polymorphic:true
     
     # Array API - every array type needs to implement these
+    # name -> (string)
+    # serial -> (string)
+    # model -> (string)
+    # firmware -> (string)
+    # space_total -> (integer) in GB
+    # space_available -> (integer) in GB
+    # space_used -> (integer) in GB
+    # family_name -> (string) - array class name (3PAR, EVA)
+    # data_center -> (DataCenter)
+    delegate :name, :serial, :model, :firmware, :space_total, :space_used, :space_available, :family_name, :data_center, to: :instance
     
-    def name
-      instance.name
-    end
-    
-    def serial
-      instance.serial
-    end
-    
-    def model
-      instance.model
-    end
-    
-    def firmware
-      instance.firmware
-    end
-    
-    def space_total
-      instance.space_total
-    end
-    
-    def space_used
-      instance.space_used
-    end
-    
-    def space_available
-      instance.space_available
-    end
   end
 end

@@ -32,10 +32,10 @@ when "development"
   i2=BearsInstance.create!(name:"VPC Germany",comment:"VPC Germany BEARS instance")
   
   # datacenters
-  i1.data_centers.create!(name:"Wynyard",dc_code:"WYN")
-  i1.data_centers.create!(name:"Doxford",dc_code:"DXS")
-  i2.data_centers.create!(name:"E-Shelter",dc_code:"EDC")
-  i2.data_centers.create!(name:"Russelsheim",dc_code:"DEG")
+  dc1=i1.data_centers.create!(name:"Wynyard",dc_code:"WYN")
+  dc2=i1.data_centers.create!(name:"Doxford",dc_code:"DXS")
+  dc3=i2.data_centers.create!(name:"E-Shelter",dc_code:"EDC")
+  dc4=i2.data_centers.create!(name:"Russelsheim",dc_code:"DEG")
   
   #3PARs
   
@@ -47,6 +47,7 @@ when "development"
     space_total = Random.rand(500..1000)
     space_available = Random.rand(0..500)
     space_used = space_total - space_available
+    data_center = [dc1,dc2,dc3,dc4][Random.rand(4)]
     Resource::Storage::A3Par::Array.create!(
       name:name,
       model:model,
@@ -54,7 +55,8 @@ when "development"
       firmware:firmware,
       space_total:space_total,
       space_available:space_available,
-      space_used:space_used
+      space_used:space_used,
+      data_center:data_center
     )
   end
 end

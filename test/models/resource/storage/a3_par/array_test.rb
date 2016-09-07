@@ -12,11 +12,13 @@
 #  space_used      :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  data_center_id  :integer
 #
 # Indexes
 #
-#  index_resource_storage_a3_par_arrays_on_name    (name)
-#  index_resource_storage_a3_par_arrays_on_serial  (serial) UNIQUE
+#  index_resource_storage_a3_par_arrays_on_data_center_id  (data_center_id)
+#  index_resource_storage_a3_par_arrays_on_name            (name)
+#  index_resource_storage_a3_par_arrays_on_serial          (serial) UNIQUE
 #
 
 require 'test_helper'
@@ -25,7 +27,7 @@ module Resource::Storage::A3Par
   class ArrayTest < ActiveSupport::TestCase
     def setup
       @array = Array.new(name: "WYN3PAR3", model: "V400", serial: "1234563",
-                     firmware: "3.1.3 MU3 P15,P16", space_total: 200, space_available:100, space_used:100)
+                     firmware: "3.1.3 MU3 P15,P16", space_total: 200, space_available:100, space_used:100, data_center: data_centers(:wynyard))
       @wyn3par1 = resource_storage_a3_par_arrays(:wyn3par1)
     end
   
@@ -68,6 +70,11 @@ module Resource::Storage::A3Par
       assert_not @array.valid?
     end
     
+    test "data_center should be present" do
+      @array.data_center = nil
+      assert_not @array.valid?
+    end
+    
     test "serial should be unique" do
       @array.serial = @wyn3par1.serial
       assert_not @array.valid?
@@ -82,6 +89,15 @@ module Resource::Storage::A3Par
       assert_nil @array.abstract_array
       @array.save
       refute_nil @array.abstract_array
+    end
+    
+    test "should return array family_name" do
+      assert_equal "3PAR", @array.family_name
+    end
+    
+    test "should belong to data center" do
+      t = Array.reflect_on_association(:data_center)
+      assert_equal :belongs_to, t.macro
     end
   end
 end

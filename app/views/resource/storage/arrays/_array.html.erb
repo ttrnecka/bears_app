@@ -1,7 +1,8 @@
 <tr>
 	<td><%= link_to array.name, array %></td>
+	<td><%= array.data_center.name %></td>
 	<td><%= array.serial %></td>
-	<td><%= array.model %></td>
+	<td><%= "#{array.family_name} #{array.model}" %></td>
 	<td><%= array.firmware %></td>
 	<td><%= array.space_total %> TB</td>
 	<td><%= array.space_used %> TB</td>

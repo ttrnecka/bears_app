@@ -12,11 +12,13 @@
 #  space_used      :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  data_center_id  :integer
 #
 # Indexes
 #
-#  index_resource_storage_a3_par_arrays_on_name    (name)
-#  index_resource_storage_a3_par_arrays_on_serial  (serial) UNIQUE
+#  index_resource_storage_a3_par_arrays_on_data_center_id  (data_center_id)
+#  index_resource_storage_a3_par_arrays_on_name            (name)
+#  index_resource_storage_a3_par_arrays_on_serial          (serial) UNIQUE
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
@@ -29,6 +31,7 @@ wyn3par1:
   space_total: 1000
   space_available: 700
   space_used: 300
+  data_center: wynyard
 
 wyn3par2:
   name: WYN3PAR2
@@ -38,3 +41,4 @@ wyn3par2:
   space_total: 400
   space_available: 100
   space_used: 100
+  data_center: wynyard

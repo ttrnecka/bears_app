@@ -12,11 +12,13 @@
 #  space_used      :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  data_center_id  :integer
 #
 # Indexes
 #
-#  index_resource_storage_a3_par_arrays_on_name    (name)
-#  index_resource_storage_a3_par_arrays_on_serial  (serial) UNIQUE
+#  index_resource_storage_a3_par_arrays_on_data_center_id  (data_center_id)
+#  index_resource_storage_a3_par_arrays_on_name            (name)
+#  index_resource_storage_a3_par_arrays_on_serial          (serial) UNIQUE
 #
 
 # this require is required to fix weird lazy loading of namespaces/modules. 
@@ -32,11 +34,18 @@ module Resource::Storage::A3Par
     validates :space_total, presence: true
     validates :space_available, presence: true
     validates :space_used, presence: true
+    validates :data_center, presence: true
     
     has_one :abstract_array, as: :instance, class_name: "Resource::Storage::Array"
+    belongs_to :data_center
     
     after_create do 
       self.create_abstract_array
+    end
+    
+    # API
+    def family_name
+      "3PAR"
     end
   end
 end
