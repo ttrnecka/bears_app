@@ -1,0 +1,44 @@
+# == Schema Information
+#
+# Table name: resource_storage_eva_arrays
+#
+#  id              :integer          not null, primary key
+#  name            :string
+#  model           :string
+#  serial          :string
+#  firmware        :string
+#  space_total     :integer
+#  space_available :integer
+#  space_used      :integer
+#  data_center_id  :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  index_resource_storage_eva_arrays_on_data_center_id  (data_center_id)
+#  index_resource_storage_eva_arrays_on_name            (name)
+#  index_resource_storage_eva_arrays_on_serial          (serial) UNIQUE
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+wyneva1:
+  name: WYN-EVA1
+  model: "8400"
+  serial: "5001-AAAA-BBBB-25E0"
+  firmware: "11300000"
+  space_total: 140
+  space_available: 30
+  space_used: 111
+  data_center: wynyard
+
+wyneva2:
+  name: WYN-EVA2
+  model: "6400"
+  serial: "5001-AAAA-BBBB-0D90"
+  firmware: "11001100"
+  space_total: 85
+  space_available: 20
+  space_used: 65
+  data_center: wynyard

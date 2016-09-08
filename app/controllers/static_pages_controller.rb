@@ -11,7 +11,7 @@ class StaticPagesController < ApplicationController
     else
       @graph_data = {}
       @graph_data[:instances] =  BearsInstance.all.map {|i| i.capacity_data }
-      @graph_data[:arrays] =  Resource::Storage::Array.all.map {|a| a.capacity_data }
+      @graph_data[:arrays] =  Resource::Storage::Array.all.sort {|x,y| x.name<=>y.name }.map {|a| a.capacity_data }
     end
   end
   

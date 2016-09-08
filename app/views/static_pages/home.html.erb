@@ -1,7 +1,7 @@
 <% provide(:title, 'Dashboard') %>
 <div ng-controller="HomePageCtrl as hp" ng-init="hp.load_data(<%= @graph_data.to_json %>)">
 	<div class="row">
-		<div class="col-lg-6" ng-show="hp.capacity_distribution_chart_exist">
+		<div class="col-lg-6" ng-show="hp.capacity_distribution_chart_exist()">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Capacity Distribution Chart
@@ -13,7 +13,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-6" ng-show="hp.capacity_usage_chart_exist">
+		<div class="col-lg-6" ng-show="hp.capacity_usage_chart_exist()">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Capacity Usage Chart
@@ -27,7 +27,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-12" ng-show="hp.capacity_usage_array_chart_exist">
+		<div class="col-lg-12" ng-show="hp.capacity_usage_array_chart_exist()">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Array Capacity Usage Chart

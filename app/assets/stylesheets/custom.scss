@@ -57,6 +57,17 @@ $gray-medium-light: #eaeaea;
   .legendLabel {
     padding-left:5px;
   }
+  
+  /* array capacty usage chart*/
+  #chart_capacity_usage_array {
+    div.xAxis div.tickLabel {
+        white-space: nowrap;
+    transform: translate(-9px, 0) rotate(-60deg);
+    text-indent: -100%;
+    transform-origin: top right;
+    text-align: right !important;
+    }
+  }
 }
 /* miscellaneous */
 

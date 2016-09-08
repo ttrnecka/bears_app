@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907191755) do
+ActiveRecord::Schema.define(version: 20160908093842) do
 
   create_table "bears_instances", force: :cascade do |t|
     t.string   "name"
@@ -53,6 +53,22 @@ ActiveRecord::Schema.define(version: 20160907191755) do
     t.integer  "data_center_id"
     t.index ["data_center_id"], name: "index_resource_storage_arrays_on_data_center_id"
     t.index ["instance_id", "instance_type"], name: "index_resource_storage_arrays_on_instance_id_and_instance_type"
+  end
+
+  create_table "resource_storage_eva_arrays", force: :cascade do |t|
+    t.string   "name"
+    t.string   "model"
+    t.string   "serial"
+    t.string   "firmware"
+    t.integer  "space_total"
+    t.integer  "space_available"
+    t.integer  "space_used"
+    t.integer  "data_center_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["data_center_id"], name: "index_resource_storage_eva_arrays_on_data_center_id"
+    t.index ["name"], name: "index_resource_storage_eva_arrays_on_name"
+    t.index ["serial"], name: "index_resource_storage_eva_arrays_on_serial", unique: true
   end
 
   create_table "users", force: :cascade do |t|

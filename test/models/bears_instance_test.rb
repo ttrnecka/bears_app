@@ -38,8 +38,10 @@ class BearsInstanceTest < ActiveSupport::TestCase
   end
   
   test "capacity_data should have data and be numeric" do
-    data = @instance.capacity_data[:data]
+    data = @instance.capacity_data
     refute_nil data
-    assert_kind_of Integer, data
+    assert_kind_of Integer, data[:data_total]
+    assert_kind_of Integer, data[:data_available]
+    assert_kind_of Integer, data[:data_used]
   end
 end

@@ -26,23 +26,7 @@
 # loaded first, lazy loading will not load the resource/storage module
 require_relative '../a3_par.rb'
 module Resource::Storage::A3Par
-  class Array < ApplicationRecord
-    validates :name, presence: true
-    validates :model, presence: true
-    validates :serial, presence: true, uniqueness: true
-    validates :firmware, presence: true
-    validates :space_total, presence: true
-    validates :space_available, presence: true
-    validates :space_used, presence: true
-    validates :data_center, presence: true
-    
-    has_one :abstract_array, as: :instance, class_name: "Resource::Storage::Array"
-    belongs_to :data_center
-    
-    after_create do 
-      self.create_abstract_array(data_center:data_center)
-    end
-    
+  class Array < Resource::Storage::ArrayRecord
     # API
     def family_name
       "3PAR"

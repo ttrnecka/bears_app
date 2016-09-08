@@ -2,14 +2,16 @@
 #
 # Table name: resource_storage_arrays
 #
-#  id            :integer          not null, primary key
-#  instance_id   :integer
-#  instance_type :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id             :integer          not null, primary key
+#  instance_id    :integer
+#  instance_type  :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  data_center_id :integer
 #
 # Indexes
 #
+#  index_resource_storage_arrays_on_data_center_id                 (data_center_id)
 #  index_resource_storage_arrays_on_instance_id_and_instance_type  (instance_id,instance_type)
 #
 
