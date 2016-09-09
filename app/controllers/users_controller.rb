@@ -36,7 +36,6 @@ class UsersController < ApplicationController
   end
   
   def update
-    params.inspect
     if @user.update_attributes(user_params)
       # admin updates should be redirected to users unless admin updates himself
       if current_user.admin? && current_user.id != @user.id

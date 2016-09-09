@@ -35,6 +35,9 @@ gem 'flot-rails', '~> 0.0.7'
 gem 'angularjs-rails'
 gem 'annotate'
 
+# used for credentials
+gem "attr_encrypted", "~> 3.0.0"
+
 # sb admin 2 bootstrap theme
 #gem 'bootstrap_sb_admin_base_v2'
 

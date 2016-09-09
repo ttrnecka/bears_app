@@ -46,9 +46,15 @@
 	                    </li>
 	                </ul>
 	            </li>
+	            <% if current_user.admin? %>
 	             <li>
 	                <a href="#" id="menu_configuration"><i class="fa fa-wrench fa-fw"></i> Configuration<span class="fa arrow"></span></a>
 	                   <ul class="nav nav-second-level collapse">
+	                      <li>
+	                         <%= link_to admin_credentials_path, id:"menu_credentials" do %>
+	                         	<i class="fa fa-bars fa-fw"></i> Credentials
+	                         <% end %>
+	                      </li>
 	                      <li>
 	                         <%= link_to users_path, id:"menu_users" do %>
 	                         	<i class="fa fa-users fa-fw"></i> Users
@@ -56,6 +62,7 @@
 	                      </li>
 	                   </ul>
 	             </li>
+	             <% end %>
 	       </ul>
 	     </div>
 	     <!-- /.sidebar-collapse -->

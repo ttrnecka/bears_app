@@ -2,6 +2,14 @@
 #
 #                  Prefix Verb   URI Pattern                            Controller#Action
 #                teaspoon        /teaspoon                              Teaspoon::Engine
+#       admin_credentials GET    /admin/credentials(.:format)           admin/credentials#index
+#                         POST   /admin/credentials(.:format)           admin/credentials#create
+#    new_admin_credential GET    /admin/credentials/new(.:format)       admin/credentials#new
+#   edit_admin_credential GET    /admin/credentials/:id/edit(.:format)  admin/credentials#edit
+#        admin_credential GET    /admin/credentials/:id(.:format)       admin/credentials#show
+#                         PATCH  /admin/credentials/:id(.:format)       admin/credentials#update
+#                         PUT    /admin/credentials/:id(.:format)       admin/credentials#update
+#                         DELETE /admin/credentials/:id(.:format)       admin/credentials#destroy
 #              magic_lamp        /magic_lamp                            MagicLamp::Engine
 #            sessions_new GET    /sessions/new(.:format)                sessions#new
 #                    root GET    /                                      static_pages#home
@@ -37,6 +45,10 @@
 #
 
 Rails.application.routes.draw do
+  
+  namespace :admin do
+    resources :credentials
+  end
   
   mount MagicLamp::Genie, at: "/magic_lamp" if defined?(MagicLamp)
   

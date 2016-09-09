@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160908093842) do
+ActiveRecord::Schema.define(version: 20160909075339) do
+
+  create_table "admin_credentials", force: :cascade do |t|
+    t.string   "account"
+    t.string   "encrypted_password"
+    t.string   "encrypted_password_iv"
+    t.string   "description"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.index ["description"], name: "index_admin_credentials_on_description", unique: true
+  end
 
   create_table "bears_instances", force: :cascade do |t|
     t.string   "name"

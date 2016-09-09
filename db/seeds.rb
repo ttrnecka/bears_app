@@ -103,4 +103,10 @@ when "development"
       data_center:data_center
     )
   end
+  
+  # credentials
+  Admin::Credential.create!(account: "admin", description: "SAN switch account",
+                       password: "password", password_confirmation: "password")
+  Admin::Credential.create!(account: "bears", description: "BEARS account for 3PARs",
+                       password: "password", password_confirmation: "password")
 end
