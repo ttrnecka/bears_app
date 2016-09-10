@@ -1,1 +1,1 @@
-@bearsNg = angular.module("bearsApp",[])
+@bearsNg = angular.module("bearsApp",["ui.bootstrap","restangular","datatables"])

@@ -5,6 +5,10 @@ module Admin
     
     def index
       @credentials = Credential.all
+      respond_to do |format|
+          format.html
+          format.json { render json: @credentials}
+      end
     end
   end
 end

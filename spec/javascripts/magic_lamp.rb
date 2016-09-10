@@ -1,4 +1,4 @@
-MagicLamp.fixture do
+MagicLamp.fixture(extend: AuthStub) do
   render partial: "layouts/sidebar"
 end
 

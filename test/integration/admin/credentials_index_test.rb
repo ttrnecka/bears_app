@@ -12,7 +12,7 @@ class Admin::CredentialsIndexTest < ActionDispatch::IntegrationTest
     Admin::Credential.all.each do |cred|
       #assert_select 'a[href=?]', admin_credential_path(cred), text: cred.description
     end
-    assert_select 'bears-data-table[table="credentials_table"]', count:1
+    assert_select 'table[datatable="ng"]', count:1
     assert_select 'table#credentials_table', count:1
   end
 end

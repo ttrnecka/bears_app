@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require angular
+//= require angular-ui-bootstrap
+//= require underscore
 //= require jquery.flot
 //= require jquery.flot.resize
 //= require jquery.flot.pie
