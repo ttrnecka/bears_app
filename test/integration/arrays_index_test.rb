@@ -12,7 +12,6 @@ class ArraysIndexTest < ActionDispatch::IntegrationTest
     Resource::Storage::Array.all.each do |array|
       assert_select 'a[href=?]', resource_storage_array_path(array), text: array.name
     end
-    assert_select 'bears-data-table[table="arrays_table"]', count:1
-    assert_select 'table#arrays_table', count:1
+    assert_select 'table#arrays_table[datatable=""]', count:1
   end
 end

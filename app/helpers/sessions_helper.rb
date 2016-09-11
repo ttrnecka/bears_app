@@ -63,12 +63,22 @@ module SessionsHelper
     unless logged_in?
       store_location
       flash[:danger]="Please log in"
-      redirect_to login_url
+      if request.format.json?
+        render :json => [], :status => :unauthorized
+      else
+        redirect_to login_url
+      end
     end
   end
   
   # Redirects non-admin users
   def admin_user
-    redirect_to(root_url) unless current_user.admin?
+    if !current_user.admin?
+      if request.format.json?
+        render :json => [], :status => :unauthorized
+      else
+        redirect_to root_url
+      end
+    end
   end
 end
