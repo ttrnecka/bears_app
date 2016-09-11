@@ -4,10 +4,12 @@ module Admin
     before_action :admin_user, only: [:index, :destroy]
     
     def index
-      @credentials = Credential.all
       respond_to do |format|
           format.html
-          format.json { render json: @credentials}
+          format.json {
+            @credentials = Credential.all 
+            render json: @credentials
+          }
       end
     end
   end

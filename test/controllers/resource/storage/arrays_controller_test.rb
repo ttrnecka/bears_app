@@ -21,6 +21,12 @@ module Resource::Storage
       assert_select "title", full_title("All Arrays")
     end
     
+    test "should disable turbolinks cache for index" do
+      log_in_as(@user)
+      get resource_storage_arrays_path
+      assert_select 'meta[name="turbolinks-cache-control"][content="no-cache"]', 1
+    end
+    
     test "should get proper subpages" do
       log_in_as(@user)
       get resource_storage_arrays_path(array_type:"A3Par")

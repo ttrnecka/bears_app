@@ -82,6 +82,12 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to login_url
   end
   
+  test "should disable turbolinks cache for index" do
+    log_in_as(@user)
+    get users_path
+    assert_select 'meta[name="turbolinks-cache-control"][content="no-cache"]', 1
+  end
+  
   
   test "should not allow the roles attribute to be edited via the web" do
     log_in_as(@other_user)

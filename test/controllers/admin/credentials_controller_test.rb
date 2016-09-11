@@ -21,6 +21,12 @@ module Admin
       refute_nil assigns(:credentials)
     end
     
+    test "should disable turbolinks cache for index" do
+      log_in_as(@user)
+      get admin_credentials_path
+      assert_select 'meta[name="turbolinks-cache-control"][content="no-cache"]', 1
+    end
+    
     test "should be redirected the index when logged in as used" do
       log_in_as @other_user
       get admin_credentials_path
