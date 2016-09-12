@@ -1,13 +1,17 @@
-@bearsNg.controller "Admin::CredentialCtrl", [ 'Restangular', '$uibModal', (Restangular,$uibModal) ->
+@bearsNg.controller "Admin::CredentialCtrl", [ 'Restangular', '$uibModal', "flash", (Restangular,$uibModal,flash) ->
    ctrl=@
    ctrl.dtInstance = {}
-   ctrl.animationsEnabled = true 
-     
+   ctrl.animationsEnabled = true
+   
+   delete_from = (array,obj) ->
+     index = array.indexOf(obj)
+     array.splice(index,1)
+   
    credentials = Restangular.all('admin/credentials')
    credentials.getList()
      .then (credentials) ->
        ctrl.credentials = credentials
-    
+     
    ctrl.delete = (credential) ->
       modalInstance = $uibModal.open {
         animation: ctrl.animationsEnabled,
@@ -25,11 +29,13 @@
 
       modalInstance.result.then (answer) ->
         credential.remove().then ->
-          flash.setMessage("Credential Removed","Success")
+          flash.setMessage("Credential has been successfully removed!!!","Success")
+          delete_from ctrl.credentials, credential
         , (result)->
-          flash.setMessage(result.data.error,"Error")
+          flash.setMessage(result.data.errors,"Error")
      
    ctrl.edit = (credential) ->
+      initial_credential = angular.copy(credential)
       modalInstance = $uibModal.open {
         animation: ctrl.animationsEnabled,
         ariaLabelledBy: 'modal-title',
@@ -45,7 +51,15 @@
       }
 
       modalInstance.result.then (credential) ->
-        console.log credential
+          credential.patch().then ->
+            flash.setMessage("Credential has been successfully updated!!!","Success")
+            delete credential.password
+            delete credential.password_confirmation
+          , (result)->
+            angular.copy(initial_credential,credential)
+            flash.setMessage("Update failed: "+result.data.errors,"Error")
+       , (type) ->
+         angular.copy(initial_credential,credential)  
    return  
 ]
 

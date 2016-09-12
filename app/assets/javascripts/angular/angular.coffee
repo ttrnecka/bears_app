@@ -1,4 +1,4 @@
-@bearsNg = angular.module("bearsApp",["ui.bootstrap","restangular","datatables","templates"])
+@bearsNg = angular.module("bearsApp",["ui.bootstrap","restangular","datatables","templates","ngSanitize"])
 
 # Global configuration
 @bearsNg.config (RestangularProvider) ->
@@ -68,13 +68,12 @@
 
 @bearsNg.directive 'ttFlash', ['flash', (flash) ->
   dir = {
-    restrict: 'EA',
+    restrict: 'E',
     controller: [ "$scope","flash", ($scope,flash) ->
       $scope.flash = flash
     ]
-    #template: '<div class="flash success" ng-show="flash.show()==\'Success\'" ng-bind-html="flash.getMessage()">{{flash.getMessage()}}</div>' + 
-    #  '<div class="flash error" ng-show="flash.show()==\'Error\'" ng-bind-html="flash.getMessage()"></div>' +
-   	#  '<div class="flash info" ng-show="flash.show()==\'Info\'" ng-bind-html="flash.getMessage()"></div>'
-   	template: '<div class="flash success" ng-show="flash.show()==\'Success\'">{{flash.getMessage()}}</div>'
+    template: '<div class="row alert alert-success" ng-show="flash.show()==\'Success\'" ng-bind-html="flash.getMessage()"></div>' + 
+      '<div class="row alert alert-danger" ng-show="flash.show()==\'Error\'" ng-bind-html="flash.getMessage()"></div>' +
+   	  '<div class="row alert alert-info" ng-show="flash.show()==\'Info\'" ng-bind-html="flash.getMessage()"></div>'
   }
 ]

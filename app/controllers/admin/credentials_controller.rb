@@ -15,7 +15,7 @@ module Admin
     
     def update
       @credential = Credential.find(params[:id])
-      permitted = params.require(:admin_credential).permit(:description, :account,:password,:password_confirmation)
+      permitted = params.require(:credential).permit(:description, :account,:password,:password_confirmation)
       if @credential.update_attributes(permitted)
         render json: @credential
       else

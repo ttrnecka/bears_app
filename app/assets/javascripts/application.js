@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require angular
+//= require angular-sanitize
 //= require angular-ui-bootstrap-tpls
 //= require angular-rails-templates
 //= require underscore

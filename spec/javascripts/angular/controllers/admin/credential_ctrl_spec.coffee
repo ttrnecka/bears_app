@@ -76,12 +76,14 @@ describe 'Admin::Credential', ()->
       spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       crd = ctrl.credentials[0]
+      size = ctrl.credentials.length
       ctrl.delete(crd)
       # simulate modal cofirm
       $httpBackend.expectDELETE("/admin/credentials/"+crd.id+".json").respond(204,'')
       fakeModal.close(crd)
       $httpBackend.flush()
-      expect(flash.getMessage()).toEqual("Credential Removed")
+      expect(flash.getMessage()).toEqual("Credential has been successfully removed!!!")
+      expect(ctrl.credentials.length).toEqual(size-1)
       
     it "should fill flash message if delete credential cannot be done",->
       $httpBackend.flush()
@@ -92,12 +94,61 @@ describe 'Admin::Credential', ()->
       # simulate modal cofirm
       # unprocesable entity
       msg = "Credential cannot be removed"
-      $httpBackend.expectDELETE("/admin/credentials/"+crd.id+".json").respond(422,{error:msg})
+      $httpBackend.expectDELETE("/admin/credentials/"+crd.id+".json").respond(422,{errors:[msg]})
       fakeModal.close(crd)
       $httpBackend.flush()
-      expect(flash.getMessage()).toEqual(msg)
-       
-  
+      expect(flash.getMessage()).toEqual([msg])
+    
+    it "should restore the credential if edit was cancelled", ->
+      $httpBackend.flush()
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
+      # opens edit modal
+      crd = ctrl.credentials[0]
+      initial = angular.copy(crd)
+      ctrl.edit(crd)
+      # edit the credential
+      crd.account = "changed_account"
+      crd.password = "pwd"
+      crd.password_confirmation = "pwd"
+      fakeModal.dismiss("cancel")
+      expect(crd).toEqual(initial)
+    
+    it "should update credential once saved",->
+      $httpBackend.flush()
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
+      # opens edit modal
+      crd = ctrl.credentials[0]
+      ctrl.edit(crd)
+      # edit the credential
+      crd.account = "changed_account"
+      crd.password = "pwd"
+      crd.password_confirmation = "pwd"
+      # simulate modal save
+      $httpBackend.expectPATCH("/admin/credentials/"+crd.id+".json").respond(crd)
+      fakeModal.close(crd)
+      $httpBackend.flush()
+      expect(flash.getMessage()).toEqual("Credential has been successfully updated!!!")
+      expect(crd.password).not.toBeDefined()
+      expect(crd.password_confirmation).not.toBeDefined()
+    
+    it "should fill flash message if update credential cannot be done",->
+      $httpBackend.flush()
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
+      # opens modal
+      crd = ctrl.credentials[0]
+      ctrl.edit(crd)
+      # edit the credential
+      old_description = crd.description
+      crd.description = "invalid description"
+      # simulate modal cofirm
+      # unprocesable entity
+      msg = "Credential cannot be updated"
+      $httpBackend.expectPATCH("/admin/credentials/"+crd.id+".json").respond(422,{errors:[msg]})
+      fakeModal.close(crd)
+      $httpBackend.flush()
+      expect(flash.getMessage()).toEqual("Update failed: " + [msg])
+      expect(crd.description).toEqual(old_description)
+      
   describe 'credentialEdit', ->
     describe 'controller', ->  
       beforeEach inject ($controller,_$templateCache_, _$compile_,$rootScope)->
@@ -157,6 +208,12 @@ describe 'Admin::Credential', ()->
           expect($scope.ctrl.credential.password).toBe("changed_pwd")
           expect($scope.ctrl.credential.password_confirmation).toBe("changed_pwd")
         
+        it "should have fields_wit_errors class divs if password does not match confirmation",->
+          @element.find('input[name="password"]').val("changed_pwd").triggerHandler('input')
+          @element.find('input[name="password_confirmation"]').val("changed_pwd_wrong").triggerHandler('input'); 
+          $scope.$digest();
+          expect(@element.find('div.field_with_errors').length).toEqual(2)
+          
         it 'should have disabled Save button if password and password confirmation are not the same', ->
           @element.find('input[name="password"]').val("changed_pwd").triggerHandler('input')
           @element.find('input[name="password_confirmation"]').val("changed_pwd_wrong").triggerHandler('input'); 
