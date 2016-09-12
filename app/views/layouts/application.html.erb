@@ -10,6 +10,7 @@
       <%= render "layouts/nav" %>
       <div id="<%= wrapper_id %>">
       	<%= render "layouts/headline" %>
+      	<tt-flash></tt-flash>
       	<div class="row">
       		<div class="col-md-12">
 		      	<% flash.each do |message_type, message| %>

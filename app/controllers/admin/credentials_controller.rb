@@ -13,13 +13,19 @@ module Admin
       end
     end
     
+    def update
+      @credential = Credential.find(params[:id])
+      permitted = params.require(:admin_credential).permit(:description, :account,:password,:password_confirmation)
+      if @credential.update_attributes(permitted)
+        render json: @credential
+      else
+        render json: { errors: @credential.errors.full_messages }, status: 422
+      end
+    end
+    
     def destroy
       credential = Credential.find(params[:id]).destroy
-      #flash[:success] = "User #{user.login} deleted"
-      respond_to do |format|
-        format.html {redirect_to admin_credentials_path }
-        format.json { head :no_content }
-      end
+      head :no_content
     end
   end
 end

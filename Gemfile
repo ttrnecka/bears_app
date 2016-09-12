@@ -34,6 +34,7 @@ gem 'font-awesome-rails', '~> 4.6', '>= 4.6.3.1'
 gem 'flot-rails', '~> 0.0.7'
 gem 'angularjs-rails'
 gem 'angular-ui-bootstrap-rails', '~> 1.3', '>= 1.3.2'
+gem 'angular-rails-templates', '~> 1.0', '>= 1.0.2'
 gem 'underscore-rails', '~> 1.8', '>= 1.8.3'
 gem 'annotate'
 

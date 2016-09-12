@@ -1,19 +1,19 @@
-@bearsNg.controller "Admin::CredentialCtrl", [ '$scope','Restangular', '$uibModal', ($scope,Restangular,$uibModal) ->
+@bearsNg.controller "Admin::CredentialCtrl", [ 'Restangular', '$uibModal', (Restangular,$uibModal) ->
    ctrl=@
    ctrl.dtInstance = {}
-   ctrl.animationsEnabled = true
-   
-   credentials = Restangular.all('admin/credentials.json')
+   ctrl.animationsEnabled = true 
+     
+   credentials = Restangular.all('admin/credentials')
    credentials.getList()
      .then (credentials) ->
        ctrl.credentials = credentials
-         
+    
    ctrl.delete = (credential) ->
       modalInstance = $uibModal.open {
         animation: ctrl.animationsEnabled,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
-        templateUrl: 'YesNoModal.html',
+        templateUrl: 'modals/yesNoModal.html',
         controller: 'YesNoModalCtrl',
         controllerAs: 'ctrl',
         size: "sm",
@@ -24,15 +24,17 @@
       }
 
       modalInstance.result.then (answer) ->
-        console.log answer
+        credential.remove().then ->
+          flash.setMessage("Credential Removed","Success")
+        , (result)->
+          flash.setMessage(result.data.error,"Error")
      
    ctrl.edit = (credential) ->
-      console.log credential
       modalInstance = $uibModal.open {
         animation: ctrl.animationsEnabled,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
-        templateUrl: 'credentialEdit.html',
+        templateUrl: 'admin/credentials/edit.html',
         controller: 'credentialEditCtrl',
         controllerAs: 'ctrl',
         size: null,
@@ -50,25 +52,15 @@
 @bearsNg.controller 'credentialEditCtrl', [ "$uibModalInstance", "credential",($uibModalInstance, credential) ->
   ctrl = @
   ctrl.credential = credential
-
+  
+  ctrl.save_disabled = ->
+    ctrl.credential.password != ctrl.credential.password_confirmation
+    
   ctrl.save = ->
     $uibModalInstance.close(ctrl.credential)
 
   ctrl.cancel = ->
     $uibModalInstance.dismiss('cancel')
-  
-  return
-]
-
-@bearsNg.controller 'YesNoModalCtrl', [ "$uibModalInstance", "question",($uibModalInstance, question) ->
-  ctrl = @
-  ctrl.question = question
-
-  ctrl.yes = ->
-    $uibModalInstance.close('yes')
-
-  ctrl.no = ->
-    $uibModalInstance.close('no')
   
   return
 ]

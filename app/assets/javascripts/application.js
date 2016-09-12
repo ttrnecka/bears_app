@@ -15,6 +15,7 @@
 //= require bootstrap-sprockets
 //= require angular
 //= require angular-ui-bootstrap-tpls
+//= require angular-rails-templates
 //= require underscore
 //= require jquery.flot
 //= require jquery.flot.resize

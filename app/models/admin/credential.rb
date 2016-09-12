@@ -18,7 +18,7 @@
 require_relative '../admin.rb'
 module Admin
   class Credential < ApplicationRecord
-    attr_encrypted :password, key: "\xDDw\xB4V\xEDJSoA\xDCV\x8D\xDD\xDC\xA7b\xB9A;\xDF\xC8\xC48u\xC4V\xAF\xF3x&\x9Ev"
+    attr_encrypted :password, key: "\xDDw\xB4V\xEDJSoA\xDCV\x8D\xDD\xDC\xA7b\xB9A;\xDF\xC8\xC48u\xC4V\xAF\xF3x&\x9Ev", encode: true
     attr_accessor :password_confirmation
     
     validates :account, presence:true
