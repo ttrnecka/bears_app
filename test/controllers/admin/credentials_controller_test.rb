@@ -6,8 +6,10 @@ module Admin
       @user = users(:tomas)
       @other_user = users(:archer)
       @cred = admin_credentials(:bears_global)
+      @new_cred = Admin::Credential.new(description: "new_description", account: "new_account", password: "new_password", password_confirmation: "new_password")
     end
     
+    # Index
     test "should redirect index when not logged in" do
       get admin_credentials_path
       assert_redirected_to login_url
@@ -39,6 +41,7 @@ module Admin
       assert_redirected_to root_url
     end
     
+    # Destroy
     test "should destroy credential as admin using json" do
       log_in_as @user
       assert_difference 'Admin::Credential.count',-1 do
@@ -73,7 +76,7 @@ module Admin
       delete admin_credential_path(@cred)
       assert_redirected_to login_url
     end
-    
+    # Update
     test "should get unauthorized on json update when not logged in" do
       patch admin_credential_path(@cred), params: { description: @cred.description,
                                                 account: @cred.account } , as: :json
@@ -109,7 +112,59 @@ module Admin
       assert_response 422
       assert_equal "Password confirmation doesn't match Password", JSON.parse(@response.body)["errors"][0]
     end
-  
+    
+    # Create
+    test "should get unauthorized on json create when not logged in" do
+      post admin_credentials_path, params: { description: @new_cred.description,
+                                                account: @new_cred.account, password: @new_cred.password, 
+                                                password_confirmation: @new_cred.password_confirmation  } , as: :json, xhr:true
+      assert_response :unauthorized
+    end
+    
+    test "should get redirected on html create when not logged in" do
+      post admin_credentials_path, params: { description: @new_cred.description,
+                                                account: @new_cred.account, password: @new_cred.password, 
+                                                password_confirmation: @new_cred.password_confirmation  } 
+      assert_redirected_to login_url
+    end
+    
+    test "should get unauthorized on json create when logged in as user" do
+      log_in_as @other_user
+      post admin_credentials_path, params: { description: @new_cred.description,
+                                                account: @new_cred.account, password: @new_cred.password, 
+                                                password_confirmation: @new_cred.password_confirmation  } , as: :json, xhr:true
+      assert_response :unauthorized
+    end
+      
+    test "should allow admin to create credential - json" do
+      log_in_as(@user)
+      post admin_credentials_path, params: { description: @new_cred.description,
+                                                account: @new_cred.account, password: @new_cred.password, 
+                                                password_confirmation: @new_cred.password_confirmation  } , as: :json, xhr:true
+      assert_response :success
+      id = JSON.parse(@response.body)["id"]
+      refute_nil id
+      assert_equal "new_account", Admin::Credential.find(id).account
+    end
+    
+    test "should require password as mandtory during create - json" do
+      log_in_as(@user)
+      post admin_credentials_path, params: { description: @new_cred.description,
+                                                account: @new_cred.account } , as: :json, xhr:true
+      assert_response 422
+      assert_equal "Password can't be blank", JSON.parse(@response.body)["errors"][0]
+    end
+    
+    test "should return errors and 422 if admin cannot create credential - json" do
+      log_in_as(@user)
+      post admin_credentials_path, params: { description: @new_cred.description,
+                                                account: @new_cred.account, password: @new_cred.password, 
+                                                password_confirmation: "new_pwd"  } , as: :json, xhr:true
+      assert_response 422
+      assert_equal "Password confirmation doesn't match Password", JSON.parse(@response.body)["errors"][0]
+    end
+    
+    # Search
     test "should redirect search by user that is not logged_in" do
       get search_admin_credentials_path(description: "test"), as: :json
       assert_redirected_to login_url

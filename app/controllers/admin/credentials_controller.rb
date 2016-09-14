@@ -23,6 +23,18 @@ module Admin
       end
     end
     
+    def create
+      params[:password]||=""
+      params[:password_confirmation]||=""
+      permitted = params.permit(:description, :account,:password,:password_confirmation).except(:credential)
+      @credential = Credential.new(permitted)
+      if @credential.save
+        render json: @credential
+      else
+        render json: { errors: @credential.errors.full_messages }, status: 422
+      end
+    end
+    
     def destroy
       credential = Credential.find(params[:id]).destroy
       head :no_content

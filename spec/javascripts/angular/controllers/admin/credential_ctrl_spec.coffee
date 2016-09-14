@@ -16,6 +16,7 @@ describe 'Admin::Credential', ()->
   $scope = null
   restangular = null
   flash = null
+  $timeout = null
   
   fake_credentials = [
     {
@@ -149,13 +150,56 @@ describe 'Admin::Credential', ()->
       expect(flash.getMessage()).toEqual("Update failed: " + [msg])
       expect(crd.description).toEqual(old_description)
       
+    it "should fill flash message if adding credential cannot be done",->
+      $httpBackend.flush()
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
+      # opens modal
+      ctrl.add()
+      # fill the credential
+      # simulate modal cofirm
+      # unprocesable entity
+      msg = "Credential cannot be created"
+      $httpBackend.expectPOST("/admin/credentials.json").respond(422,{errors:[msg]})
+      crd = {
+        description: "new_description"
+        account: "new_account"
+        password: "new_password"
+        password_confirmation: "new_password"
+      }
+      fakeModal.close(crd)
+      $httpBackend.flush()
+      expect(flash.getMessage()).toEqual("Adding credential failed: " + [msg])
+      
+    it "should create credential once saved",->
+      $httpBackend.flush()
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
+      # opens edit modal
+      ctrl.add()
+      # fill the credential
+      # simulate modal save
+      crd = {
+        description: "new_description"
+        account: "new_account"
+        password: "new_password"
+        password_confirmation: "new_password"
+      }
+      $httpBackend.expectPOST("/admin/credentials.json").respond(crd)
+      fakeModal.close(crd)
+      $httpBackend.flush()
+      expect(flash.getMessage()).toEqual("Credential has been successfully created!!!")
+      console.log ctrl.credentials
+      expect(ctrl.credentials[0].description).toEqual(crd.description)
+      
   describe 'credentialEdit', ->
     describe 'controller', ->  
-      beforeEach inject ($controller,_$templateCache_, _$compile_,$rootScope)->
+      beforeEach inject ($controller,_$templateCache_, _$compile_,$rootScope,_$timeout_,$injector)->
         $scope=$rootScope.$new();
+        $timeout = _$timeout_
+        $httpBackend = $injector.get('$httpBackend')
         ctrl = $controller 'credentialEditCtrl', {
           $uibModalInstance: modalInstance, 
           credential: credential
+          title: "Edit"
         }
         $templateCache = _$templateCache_
         $compile = _$compile_
@@ -208,17 +252,16 @@ describe 'Admin::Credential', ()->
           expect(@element.find('button[ng-click="ctrl.cancel()"]').text()).toBe("Cancel")
         
         it "should reflect input change in controller", ->
-          console.log @element.find('input[name="description"]')
-          $httpBackend.expectGET("/admin/credentials/search.json").respond(200,[])
+          $scope.$digest()
           @element.find('input[name="description"]').val("changed_desc").triggerHandler('input')
           @element.find('input[name="account"]').val("changed_acc").triggerHandler('input')
           @element.find('input[name="password"]').val("changed_pwd").triggerHandler('input')
           @element.find('input[name="password_confirmation"]').val("changed_pwd").triggerHandler('input')
-          $scope.$digest();
+          # description has debounced async handler so we need to simulate http and flush ale timeouts
+          $httpBackend.expectGET("/admin/credentials/search.json?description=changed_desc").respond(200,[])
+          $timeout.flush()
           $httpBackend.flush()
-          $scope.$digest();
-          console.log @element.find('input[name="description"]')
-          #expect($scope.ctrl.credential.description).toBe("changed_desc")
+          expect($scope.ctrl.credential.description).toBe("changed_desc")
           expect($scope.ctrl.credential.account).toBe("changed_acc")
           expect($scope.ctrl.credential.password).toBe("changed_pwd")
           expect($scope.ctrl.credential.password_confirmation).toBe("changed_pwd")
@@ -228,9 +271,67 @@ describe 'Admin::Credential', ()->
           @element.find('input[name="password_confirmation"]').val("changed_pwd_wrong").triggerHandler('input'); 
           $scope.$digest();
           expect(@element.find('div.field_with_errors').length).toEqual(2)
+        
+        it "should have fields_wit_errors class divs if account is missing",->
+          @element.find('input[name="account"]').val("").triggerHandler('input') 
+          $scope.$digest();
+          expect(@element.find('div.field_with_errors').length).toEqual(1)
+        
+        it "should have fields_wit_errors class divs if description is invalid",->
+          $scope.$digest()
+          ctrl.form.description.$setValidity("descriptionasync",false)
+          $scope.$digest()
+          expect(@element.find('div.field_with_errors').length).toEqual(1)
           
+        it "should have fields_wit_errors class divs if description is empty",->
+          $scope.$digest()
+          ctrl.form.description.$setValidity("required",false)
+          $scope.$digest()
+          expect(@element.find('div.field_with_errors').length).toEqual(1)
+            
         it 'should have disabled Save button if password and password confirmation are not the same', ->
           @element.find('input[name="password"]').val("changed_pwd").triggerHandler('input')
           @element.find('input[name="password_confirmation"]').val("changed_pwd_wrong").triggerHandler('input'); 
           $scope.$digest();
           expect(@element.find('button[ng-click="ctrl.save()"]').prop('disabled')).toBe(true)
+          
+        it 'should have disabled Save button if form is invalid', ->
+          $scope.$digest()
+          ctrl.form.description.$setValidity("descriptionasyc",false)
+          $scope.$digest();
+          expect(@element.find('button[ng-click="ctrl.save()"]').prop('disabled')).toBe(true)
+
+        it "should display message about checking description", ->
+          $scope.$digest()
+          ctrl.form.description.$setValidity("descriptionasync",undefined)
+          $scope.$digest()
+          expect(@element.find('li[name="desc_check_pending"]').hasClass("ng-hide")).not.toBe(true)
+        
+        it "should display message about wrong description", ->
+          $scope.$digest()
+          ctrl.form.description.$setValidity("descriptionasync",false)
+          $scope.$digest()
+          expect(@element.find('li[name="desc_check_error"]').hasClass("ng-hide")).not.toBe(true)
+        
+        it "should display message about empty description", ->
+          $scope.$digest()
+          ctrl.form.description.$setValidity("required",false)
+          $scope.$digest()
+          expect(@element.find('li[name="desc_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
+        
+        it "should display message about wrong password", ->
+          $scope.$digest()
+          @element.find('input[name="password"]').val("changed_pwd").triggerHandler('input')
+          @element.find('input[name="password_confirmation"]').val("wrong_pwd").triggerHandler('input')
+          $scope.$digest()
+          expect(@element.find('li[name="passwd_check_error"]').hasClass("ng-hide")).not.toBe(true)
+          
+        it "should display message about missing account", ->
+          $scope.$digest()
+          @element.find('input[name="account"]').val("").triggerHandler('input')
+          $scope.$digest()
+          expect(@element.find('li[name="account_check_error"]').hasClass("ng-hide")).not.toBe(true)
+        
+        it "should display the proper title", ->
+          $scope.$digest()
+          expect(@element.find('h3').text()).toMatch("Edit")

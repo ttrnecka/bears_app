@@ -1,9 +1,3 @@
-CredentialAngController
-- add Add feature
-- use same modal for Add/Edit with displaying of save issues
-- Edit/Add modal - add further error displaying tests
-
-CredetialController
- - does not update password as params are missing password and confirmation in part of payload
-
+CredentialEditModal
+ - test password required functionality
 Angular - test all directives/factories moved from BEARS

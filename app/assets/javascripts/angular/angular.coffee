@@ -1,4 +1,4 @@
-@bearsNg = angular.module("bearsApp",["ui.bootstrap","restangular","datatables","templates","ngSanitize"])
+@bearsNg = angular.module("bearsApp",["ui.bootstrap","restangular","datatables","datatables.buttons","templates","ngSanitize"])
 
 # Global configuration
 @bearsNg.config (RestangularProvider) ->
