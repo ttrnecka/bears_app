@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
-  after_filter :set_csrf_cookie_for_ng
+  after_action :set_csrf_cookie_for_ng
   
   LOG_DIR = Rails.root.to_s + '/log'
   

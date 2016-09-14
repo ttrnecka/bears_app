@@ -15,7 +15,7 @@ module Admin
     
     def update
       @credential = Credential.find(params[:id])
-      permitted = params.require(:credential).permit(:description, :account,:password,:password_confirmation)
+      permitted = params.permit(:description, :account,:password,:password_confirmation).except(:credential)
       if @credential.update_attributes(permitted)
         render json: @credential
       else
@@ -26,6 +26,13 @@ module Admin
     def destroy
       credential = Credential.find(params[:id]).destroy
       head :no_content
+    end
+    
+    def search
+      if params[:description]
+        @found = Credential.where(description: params[:description])
+      end
+      render json: @found
     end
   end
 end

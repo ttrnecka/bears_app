@@ -75,28 +75,28 @@ module Admin
     end
     
     test "should get unauthorized on json update when not logged in" do
-      patch admin_credential_path(@cred), params: { admin_credential: { description: @cred.description,
-                                                account: @cred.account } }, as: :json
+      patch admin_credential_path(@cred), params: { description: @cred.description,
+                                                account: @cred.account } , as: :json
       assert_response :unauthorized
     end
     
     test "should get redirected on html update when not logged in" do
-      patch admin_credential_path(@cred), params: { admin_credential: { description: @cred.description,
-                                                account: @cred.account } }
+      patch admin_credential_path(@cred), params: { description: @cred.description,
+                                                account: @cred.account }
       assert_redirected_to login_url
     end
     
     test "should get unauthorized on json update when logged in as user" do
       log_in_as @other_user
-      patch admin_credential_path(@cred), params: { admin_credential: { description: @cred.description,
-                                                account: @cred.account } }, as: :json
+      patch admin_credential_path(@cred), params: { description: @cred.description,
+                                                account: @cred.account }, as: :json
       assert_response :unauthorized
     end
       
     test "should allow admin to update credential - json" do
       log_in_as(@user)
-      patch admin_credential_path(@cred), params: { admin_credential: { description: @cred.description,
-                                                account: "test_account" } }, as: :json
+      patch admin_credential_path(@cred), params: { description: @cred.description,
+                                                account: "test_account" }, as: :json
       assert_response :success
       assert_equal "test_account", @cred.reload.account
       refute_nil JSON.parse(@response.body)["id"]
@@ -104,11 +104,28 @@ module Admin
     
     test "should return errors and 422 if admin cannot update credential - json" do
       log_in_as(@user)
-      patch admin_credential_path(@cred), params: { admin_credential: { description: @cred.description,
-                                                account: "test_account", password:"password",password_confirmation:"pswd" } }, as: :json
+      patch admin_credential_path(@cred), params: { description: @cred.description,
+                                                account: "test_account", password:"password",password_confirmation:"pswd" }, as: :json
       assert_response 422
       assert_equal "Password confirmation doesn't match Password", JSON.parse(@response.body)["errors"][0]
     end
   
+    test "should redirect search by user that is not logged_in" do
+      get search_admin_credentials_path(description: "test"), as: :json
+      assert_redirected_to login_url
+    end
+    
+    test "should get unauthorized on json search when logged in as user" do
+      log_in_as(@other_user)
+      get search_admin_credentials_path, params: {description: "test"}
+      assert_redirected_to root_url
+    end
+    
+    test "should retunr list of found credetials for admin" do
+      log_in_as @user
+      get search_admin_credentials_path, params: {description: "Bears account for VPC UK"}, xhr:true
+      assert_response :success
+      assert_equal JSON.parse([@cred].to_json), JSON.parse(@response.body)
+    end
   end
 end

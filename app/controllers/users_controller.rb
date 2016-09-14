@@ -60,8 +60,10 @@ class UsersController < ApplicationController
   private
   
     def user_params
-      if current_user && current_user.admin?
-        params.require(:user).permit(:name, :email, :login, :roles)
+      # admin updating some else
+      if current_user && current_user.admin? && current_user.id != params[:id].to_i
+          params.require(:user).permit(:name, :email, :login, :roles)
+      # users/admin updating/creating themselves
       else
         params.require(:user).permit(:name, :email, :login, :password, :password_confirmation)
       end

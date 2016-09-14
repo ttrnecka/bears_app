@@ -77,6 +77,36 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "U", @other_user.reload.roles
   end
   
+  test "should allow user to change profile" do
+    log_in_as @other_user
+    patch user_path(@other_user), params: { user: { name: "changed_name", password:"testing", password_confirmation:"testing" } }
+    assert_redirected_to user_path(@other_user)
+    assert_equal "changed_name", @other_user.reload.name
+    assert @other_user.authenticate('testing')
+  end
+  
+  test "should not allow user to change his role" do
+    log_in_as @other_user
+    patch user_path(@other_user), params: { user: { roles: "A" } }
+    assert_redirected_to user_path(@other_user)
+    assert_equal "U", @other_user.reload.roles 
+  end
+  
+  test "should allow admin to change his password" do
+    log_in_as @user
+    patch user_path(@user), params: { user: { name: "changed_name", password:"testing", password_confirmation:"testing" } }
+    assert_redirected_to user_path(@user)
+    assert_equal "changed_name", @user.reload.name
+    assert @user.authenticate('testing')
+  end
+  
+  test "should allow admin to change profile" do
+    log_in_as @user
+    patch user_path(@user), params: { user: { name: "changed_name" } }
+    assert_redirected_to user_path(@user)
+    assert_equal "changed_name", @user.reload.name 
+  end
+  
   test "should redirect index when not logged in" do
     get users_path
     assert_redirected_to login_url

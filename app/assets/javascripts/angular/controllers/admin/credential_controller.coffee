@@ -69,7 +69,10 @@
   
   ctrl.save_disabled = ->
     ctrl.credential.password != ctrl.credential.password_confirmation
-    
+  
+  ctrl.password_ok = ->
+    ctrl.credential.password == ctrl.credential.password_confirmation
+      
   ctrl.save = ->
     $uibModalInstance.close(ctrl.credential)
 

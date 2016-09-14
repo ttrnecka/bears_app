@@ -47,7 +47,11 @@
 Rails.application.routes.draw do
   
   namespace :admin do
-    resources :credentials
+    resources :credentials do
+      collection do
+        get "search"
+      end
+    end
   end
   
   mount MagicLamp::Genie, at: "/magic_lamp" if defined?(MagicLamp)

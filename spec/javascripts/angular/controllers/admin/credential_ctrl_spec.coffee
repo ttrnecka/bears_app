@@ -180,6 +180,16 @@ describe 'Admin::Credential', ()->
         ctrl.credential.password = "1"
         ctrl.credential.password_confirmation = "2"
         expect(ctrl.save_disabled()).toBe(true)
+      
+      it "ctrl.password_ok() return true if passwords are same", ->
+        ctrl.credential.password = "1"
+        ctrl.credential.password_confirmation = "1"
+        expect(ctrl.password_ok()).toBe(true)
+      
+      it "ctrl.password_ok() return false if passwords are not same", ->
+        ctrl.credential.password = "1"
+        ctrl.credential.password_confirmation = "2"
+        expect(ctrl.password_ok()).toBe(false)
         
       describe "template",->
         beforeEach ->
@@ -198,12 +208,17 @@ describe 'Admin::Credential', ()->
           expect(@element.find('button[ng-click="ctrl.cancel()"]').text()).toBe("Cancel")
         
         it "should reflect input change in controller", ->
+          console.log @element.find('input[name="description"]')
+          $httpBackend.expectGET("/admin/credentials/search.json").respond(200,[])
           @element.find('input[name="description"]').val("changed_desc").triggerHandler('input')
           @element.find('input[name="account"]').val("changed_acc").triggerHandler('input')
           @element.find('input[name="password"]').val("changed_pwd").triggerHandler('input')
           @element.find('input[name="password_confirmation"]').val("changed_pwd").triggerHandler('input')
           $scope.$digest();
-          expect($scope.ctrl.credential.description).toBe("changed_desc")
+          $httpBackend.flush()
+          $scope.$digest();
+          console.log @element.find('input[name="description"]')
+          #expect($scope.ctrl.credential.description).toBe("changed_desc")
           expect($scope.ctrl.credential.account).toBe("changed_acc")
           expect($scope.ctrl.credential.password).toBe("changed_pwd")
           expect($scope.ctrl.credential.password_confirmation).toBe("changed_pwd")
