@@ -25,7 +25,7 @@
       currentMessage
       
     show: ->
-       if type < -1 then "" else  types[type]
+       if type <= -1 then "" else  types[type]
       
     clear: ->
       currentMessage = ""
@@ -49,11 +49,11 @@
     responseError: (response) ->
     # not authorized
       if response.status == 401
-        alert("Not logged in - redirecting to sing in page")
+        $window.alert("Not logged in - redirecting to sing in page")
         $window.location.href="/signin"
     
       if response.status == 403
-        alert("Access forbidden")
+        $window.alert("Access forbidden")
         $window.location.href="/"
     
       if response.status == 500

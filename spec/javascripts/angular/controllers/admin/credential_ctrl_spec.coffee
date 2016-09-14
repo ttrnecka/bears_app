@@ -187,7 +187,6 @@ describe 'Admin::Credential', ()->
       fakeModal.close(crd)
       $httpBackend.flush()
       expect(flash.getMessage()).toEqual("Credential has been successfully created!!!")
-      console.log ctrl.credentials
       expect(ctrl.credentials[0].description).toEqual(crd.description)
       
   describe 'credentialEdit', ->
@@ -198,8 +197,9 @@ describe 'Admin::Credential', ()->
         $httpBackend = $injector.get('$httpBackend')
         ctrl = $controller 'credentialEditCtrl', {
           $uibModalInstance: modalInstance, 
-          credential: credential
-          title: "Edit"
+          data: 
+            credential: credential
+            mode: "edit"
         }
         $templateCache = _$templateCache_
         $compile = _$compile_
@@ -325,6 +325,30 @@ describe 'Admin::Credential', ()->
           @element.find('input[name="password_confirmation"]').val("wrong_pwd").triggerHandler('input')
           $scope.$digest()
           expect(@element.find('li[name="passwd_check_error"]').hasClass("ng-hide")).not.toBe(true)
+          
+        it "should not display message about missing password if edit mode", ->
+          $scope.$digest()
+          @element.find('input[name="password"]').val("").triggerHandler('input')
+          @element.find('input[name="password_confirmation"]').val("").triggerHandler('input')
+          $scope.$digest()
+          expect(@element.find('li[name="passwd_exist_check_error"]').hasClass("ng-hide")).toBe(true)
+          
+        it "should display message about missing password if not edit mode", ->
+          ctrl = $controller 'credentialEditCtrl', {
+            $uibModalInstance: modalInstance, 
+            data: 
+              credential: credential
+              mode: "new"
+          }
+          $scope.ctrl = ctrl
+          modalTemplate = $templateCache.get('admin/credentials/edit.html')
+          @element = $compile(modalTemplate)($scope)
+          
+          $scope.$digest()
+          @element.find('input[name="password"]').val("").triggerHandler('input')
+          @element.find('input[name="password_confirmation"]').val("").triggerHandler('input')
+          $scope.$digest()
+          expect(@element.find('li[name="passwd_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
           
         it "should display message about missing account", ->
           $scope.$digest()

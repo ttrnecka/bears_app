@@ -1,3 +1,4 @@
-CredentialEditModal
- - test password required functionality
-Angular - test all directives/factories moved from BEARS
+Angular - test
+  ttFlash directive
+  errorhandler
+  ttCredentialDescription directive

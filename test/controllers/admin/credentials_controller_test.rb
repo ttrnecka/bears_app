@@ -113,6 +113,15 @@ module Admin
       assert_equal "Password confirmation doesn't match Password", JSON.parse(@response.body)["errors"][0]
     end
     
+    test "should nil passwords blank during update to prevent blank error - json" do
+      log_in_as(@user)
+      patch admin_credential_path(@cred), params: { description: @cred.description,
+                                                account: "test_account", password:"",password_confirmation:"" }, as: :json
+      assert_response :success
+      assert_equal "test_account", @cred.reload.account
+      refute_nil JSON.parse(@response.body)["id"]
+    end
+    
     # Create
     test "should get unauthorized on json create when not logged in" do
       post admin_credentials_path, params: { description: @new_cred.description,

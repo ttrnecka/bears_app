@@ -52,15 +52,14 @@
         controllerAs: 'ctrl',
         size: null,
         resolve: {
-          credential: ->
+          data: ->
             return {
-              password: ""
-              password_confirmation: ""
+              credential: {
+                password: ""
+                password_confirmation: ""
+              }
+              mode: "new"
             }
-          title: ->
-            return "New"
-          mode: ->
-            return "create"
         }
       }
 
@@ -73,6 +72,8 @@
    
    ctrl.edit = (credential) ->
       initial_credential = angular.copy(credential)
+      credential.password = ""
+      credential.password_confirmation = ""
       modalInstance = $uibModal.open {
         animation: ctrl.animationsEnabled,
         ariaLabelledBy: 'modal-title',
@@ -82,12 +83,11 @@
         controllerAs: 'ctrl',
         size: null,
         resolve: {
-          credential: ->
-            return credential
-          title: ->
-            return "Edit"
-          mode: ->
-            return "edit"
+          data: ->
+            return {
+              credential: credential
+              mode: "edit"
+            }
         }
       }
 
@@ -104,14 +104,11 @@
    return  
 ]
 
-@bearsNg.controller 'credentialEditCtrl', [ "$uibModalInstance", "credential","title","mode",($uibModalInstance, credential, title, mode) ->
+@bearsNg.controller 'credentialEditCtrl', [ "$uibModalInstance", "data",($uibModalInstance, data) ->
   ctrl = @
-  ctrl.credential = credential
-  ctrl.title = title
-  if mode
-    ctrl.mode = mode
-  else
-    ctrl.mode = "edit"
+  ctrl.credential = data.credential
+  ctrl.mode = data.mode
+  ctrl.title = data.mode.charAt(0).toUpperCase() + data.mode.slice(1)
   
   ctrl.save_disabled = ->
     ctrl.credential.password != ctrl.credential.password_confirmation || ctrl.form.$invalid
