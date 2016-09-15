@@ -1,4 +1,9 @@
-Angular - test
-  ttFlash directive
-  errorhandler
-  ttCredentialDescription directive
+UserNGController
+  angularize promote/demote
+
+UserController
+  json for update
+  jsom for index
+
+User view
+  angularize datatable

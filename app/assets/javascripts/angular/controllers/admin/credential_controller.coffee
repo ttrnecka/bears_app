@@ -36,11 +36,12 @@
       }
 
       modalInstance.result.then (answer) ->
-        credential.remove().then ->
-          flash.setMessage("Credential has been successfully removed!!!","Success")
-          delete_from ctrl.credentials, credential
-        , (result)->
-          flash.setMessage(result.data.errors,"Error")
+        if answer=="yes"
+          credential.remove().then ->
+            flash.reportSuccess("Credential has been successfully removed!!!")
+            delete_from ctrl.credentials, credential
+          , (result)->
+            flash.reportDanger(result.data.errors)
    
    ctrl.add = () ->
      modalInstance = $uibModal.open {
@@ -65,10 +66,10 @@
 
      modalInstance.result.then (credential) ->
        credentials.post(credential).then (response)->
-         flash.setMessage("Credential has been successfully created!!!","Success")
+         flash.reportSuccess("Credential has been successfully created!!!")
          ctrl.credentials.unshift(response)
        , (result)->
-         flash.setMessage("Adding credential failed: "+result.data.errors,"Error")    
+         flash.reportDanger("Adding credential failed: "+result.data.errors)    
    
    ctrl.edit = (credential) ->
       initial_credential = angular.copy(credential)
@@ -93,12 +94,12 @@
 
       modalInstance.result.then (credential) ->
           credential.patch().then ->
-            flash.setMessage("Credential has been successfully updated!!!","Success")
+            flash.reportSuccess("Credential has been successfully updated!!!")
             delete credential.password
             delete credential.password_confirmation
           , (result)->
             angular.copy(initial_credential,credential)
-            flash.setMessage("Update failed: "+result.data.errors,"Error")
+            flash.reportDanger("Update failed: "+result.data.errors)
        , (type) ->
          angular.copy(initial_credential,credential)  
    return  

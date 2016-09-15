@@ -81,10 +81,22 @@ describe 'Admin::Credential', ()->
       ctrl.delete(crd)
       # simulate modal cofirm
       $httpBackend.expectDELETE("/admin/credentials/"+crd.id+".json").respond(204,'')
-      fakeModal.close(crd)
+      fakeModal.close("yes")
       $httpBackend.flush()
       expect(flash.getMessage()).toEqual("Credential has been successfully removed!!!")
       expect(ctrl.credentials.length).toEqual(size-1)
+      
+    it "should not delete credential if not confirmed",->
+      $httpBackend.flush()
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
+      # opens modal
+      crd = ctrl.credentials[0]
+      size = ctrl.credentials.length
+      ctrl.delete(crd)
+      # simulate modal cofirm
+      fakeModal.close("no")
+      expect(flash.getMessage()).toEqual("")
+      expect(ctrl.credentials.length).toEqual(size)
       
     it "should fill flash message if delete credential cannot be done",->
       $httpBackend.flush()
@@ -96,7 +108,7 @@ describe 'Admin::Credential', ()->
       # unprocesable entity
       msg = "Credential cannot be removed"
       $httpBackend.expectDELETE("/admin/credentials/"+crd.id+".json").respond(422,{errors:[msg]})
-      fakeModal.close(crd)
+      fakeModal.close("yes")
       $httpBackend.flush()
       expect(flash.getMessage()).toEqual([msg])
     
