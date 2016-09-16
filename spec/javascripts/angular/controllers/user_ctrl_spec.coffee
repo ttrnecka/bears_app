@@ -63,6 +63,7 @@ describe 'User', ()->
       $controller = _$controller_
       flash = _flash_
       spinner = ttspinner
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
       $httpBackend.expectGET("/users.json").respond(fake_users)
       ctrl = $controller 'UserCtrl', {
         $scope: $scope
@@ -84,7 +85,6 @@ describe 'User', ()->
       
     it "should delete user once confirmed",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       usr = ctrl.users[0]
       size = ctrl.users.length
@@ -92,25 +92,26 @@ describe 'User', ()->
       # simulate modal cofirm
       $httpBackend.expectDELETE("/users/"+usr.id+".json").respond(204,'')
       fakeModal.close("yes")
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("User has been successfully removed!!!")
       expect(ctrl.users.length).toEqual(size-1)
       
     it "should not delete user if not confirmed",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       usr = ctrl.users[0]
       size = ctrl.users.length
       ctrl.delete(usr)
       # simulate modal cofirm
       fakeModal.close("no")
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("")
       expect(ctrl.users.length).toEqual(size)
       
     it "should fill flash message if delete user cannot be done",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       usr = ctrl.users[0]
       ctrl.delete(usr)
@@ -119,7 +120,9 @@ describe 'User', ()->
       msg = "User cannot be removed"
       $httpBackend.expectDELETE("/users/"+usr.id+".json").respond(422,{errors:[msg]})
       fakeModal.close("yes")
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual([msg])
       
     it "should promote user",->
@@ -131,7 +134,9 @@ describe 'User', ()->
         return true
       ).respond(usr)
       ctrl.promote(usr)
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("User has been successfully promoted!!!")
       expect(ctrl.users[0].roles).toEqual("A")
       
@@ -144,7 +149,9 @@ describe 'User', ()->
         return true
       ).respond(usr)
       ctrl.demote(usr)
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("User has been successfully demoted!!!")
       expect(ctrl.users[0].roles).toEqual("U")
       

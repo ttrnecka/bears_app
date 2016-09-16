@@ -1,7 +1,6 @@
 @bearsNg.controller "Admin::CredentialCtrl", [ 'Restangular', '$uibModal', "flash", "DTOptionsBuilder","ttspinner", (Restangular,$uibModal,flash,DTOptionsBuilder,ttspinner) ->
    ctrl=@
    ctrl.dtInstance = {}
-   ctrl.animationsEnabled = true
    ctrl.dtOptions = DTOptionsBuilder.newOptions().withDOM("<'row'<'col-sm-5'l><'col-sm-2'B><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>").withButtons [
      {
        text: "New Credential"
@@ -19,12 +18,12 @@
    ttspinner.show()
    credentials.getList()
      .then (credentials) ->
-       ttspinner.hide()
        ctrl.credentials = credentials
+     .finally ->
+       ttspinner.hide()
      
    ctrl.delete = (credential) ->
       modalInstance = $uibModal.open {
-        animation: ctrl.animationsEnabled,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
         templateUrl: 'modals/yesNoModal.html',
@@ -39,15 +38,17 @@
 
       modalInstance.result.then (answer) ->
         if answer=="yes"
+          ttspinner.show()
           credential.remove().then ->
             flash.reportSuccess("Credential has been successfully removed!!!")
             delete_from ctrl.credentials, credential
           , (result)->
             flash.reportDanger(result.data.errors)
+          .finally ->
+            ttspinner.hide()
    
    ctrl.add = () ->
      modalInstance = $uibModal.open {
-        animation: ctrl.animationsEnabled,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
         templateUrl: 'admin/credentials/edit.html',
@@ -67,24 +68,25 @@
       }
 
      modalInstance.result.then (credential) ->
+       ttspinner.show()
        credentials.post(credential).then (response)->
          flash.reportSuccess("Credential has been successfully created!!!")
          ctrl.credentials.unshift(response)
        , (result)->
          flash.reportDanger("Adding credential failed: "+result.data.errors)    
+       .finally ->
+         ttspinner.hide()
    
    ctrl.edit = (credential) ->
       initial_credential = angular.copy(credential)
       credential.password = ""
       credential.password_confirmation = ""
       modalInstance = $uibModal.open {
-        animation: ctrl.animationsEnabled,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
         templateUrl: 'admin/credentials/edit.html',
         controller: 'credentialEditCtrl',
         controllerAs: 'ctrl',
-        size: null,
         resolve: {
           data: ->
             return {
@@ -95,6 +97,7 @@
       }
 
       modalInstance.result.then (credential) ->
+          ttspinner.show()
           credential.patch().then ->
             flash.reportSuccess("Credential has been successfully updated!!!")
             delete credential.password
@@ -102,6 +105,8 @@
           , (result)->
             angular.copy(initial_credential,credential)
             flash.reportDanger("Update failed: "+result.data.errors)
+          .finally ->
+            ttspinner.hide()
        , (type) ->
          angular.copy(initial_credential,credential)  
    return  

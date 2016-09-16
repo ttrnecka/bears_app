@@ -168,4 +168,25 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to root_url
   end
+  
+  test "should destroy user as admin using json" do
+    log_in_as @user
+    assert_difference 'User.count',-1 do
+      delete user_path(@other_user), as: :json
+    end
+    assert_response :success
+  end
+
+  test "should unauthorize destroy when logged as user using json" do
+    log_in_as @other_user
+    assert_no_difference 'User.count' do
+      delete user_path(@other_user), as: :json
+    end
+    assert_response :unauthorized
+  end
+    
+  test "should unautorize destroy when not logged in using json" do
+    delete user_path(@other_user),  as: :json
+    assert_response :unauthorized
+  end
 end

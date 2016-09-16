@@ -1,5 +1,11 @@
-ttspinner - test directove modal - may need to change to anurlar modal UI
-
 User view
 Credential view
   test views
+  
+Array show view
+Angularize array view?
+
+Array Capacity Usage Chart - text on bottom goes off the chart
+ - limit the amout of items in that graph (scrolling??)
+
+Array table - ordering space is by string

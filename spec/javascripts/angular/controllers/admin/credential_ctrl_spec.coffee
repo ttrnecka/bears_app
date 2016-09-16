@@ -57,6 +57,7 @@ describe 'Admin::Credential', ()->
       $controller = _$controller_
       flash = _flash_
       spinner = ttspinner
+      spyOn($uibModal,"open").and.returnValue(fakeModal)
       $httpBackend.expectGET("/admin/credentials.json").respond(fake_credentials)
       ctrl = $controller 'Admin::CredentialCtrl', {
         $scope: $scope
@@ -78,7 +79,6 @@ describe 'Admin::Credential', ()->
       
     it "should delete credential once confirmed",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       crd = ctrl.credentials[0]
       size = ctrl.credentials.length
@@ -86,25 +86,26 @@ describe 'Admin::Credential', ()->
       # simulate modal cofirm
       $httpBackend.expectDELETE("/admin/credentials/"+crd.id+".json").respond(204,'')
       fakeModal.close("yes")
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("Credential has been successfully removed!!!")
       expect(ctrl.credentials.length).toEqual(size-1)
       
     it "should not delete credential if not confirmed",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       crd = ctrl.credentials[0]
       size = ctrl.credentials.length
       ctrl.delete(crd)
       # simulate modal cofirm
       fakeModal.close("no")
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("")
       expect(ctrl.credentials.length).toEqual(size)
       
     it "should fill flash message if delete credential cannot be done",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       crd = ctrl.credentials[0]
       ctrl.delete(crd)
@@ -113,12 +114,13 @@ describe 'Admin::Credential', ()->
       msg = "Credential cannot be removed"
       $httpBackend.expectDELETE("/admin/credentials/"+crd.id+".json").respond(422,{errors:[msg]})
       fakeModal.close("yes")
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual([msg])
     
     it "should restore the credential if edit was cancelled", ->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens edit modal
       crd = ctrl.credentials[0]
       initial = angular.copy(crd)
@@ -128,11 +130,11 @@ describe 'Admin::Credential', ()->
       crd.password = "pwd"
       crd.password_confirmation = "pwd"
       fakeModal.dismiss("cancel")
+      expect(spinner.state).toBe(false)
       expect(crd).toEqual(initial)
     
     it "should update credential once saved",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens edit modal
       crd = ctrl.credentials[0]
       ctrl.edit(crd)
@@ -143,14 +145,15 @@ describe 'Admin::Credential', ()->
       # simulate modal save
       $httpBackend.expectPATCH("/admin/credentials/"+crd.id+".json").respond(crd)
       fakeModal.close(crd)
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("Credential has been successfully updated!!!")
       expect(crd.password).not.toBeDefined()
       expect(crd.password_confirmation).not.toBeDefined()
     
     it "should fill flash message if update credential cannot be done",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       crd = ctrl.credentials[0]
       ctrl.edit(crd)
@@ -162,13 +165,14 @@ describe 'Admin::Credential', ()->
       msg = "Credential cannot be updated"
       $httpBackend.expectPATCH("/admin/credentials/"+crd.id+".json").respond(422,{errors:[msg]})
       fakeModal.close(crd)
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("Update failed: " + [msg])
       expect(crd.description).toEqual(old_description)
       
     it "should fill flash message if adding credential cannot be done",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens modal
       ctrl.add()
       # fill the credential
@@ -183,12 +187,13 @@ describe 'Admin::Credential', ()->
         password_confirmation: "new_password"
       }
       fakeModal.close(crd)
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("Adding credential failed: " + [msg])
       
     it "should create credential once saved",->
       $httpBackend.flush()
-      spyOn($uibModal,"open").and.returnValue(fakeModal)
       # opens edit modal
       ctrl.add()
       # fill the credential
@@ -201,7 +206,9 @@ describe 'Admin::Credential', ()->
       }
       $httpBackend.expectPOST("/admin/credentials.json").respond(crd)
       fakeModal.close(crd)
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("Credential has been successfully created!!!")
       expect(ctrl.credentials[0].description).toEqual(crd.description)
       

@@ -67,8 +67,7 @@ class UsersController < ApplicationController
   
   def destroy
     user = User.find(params[:id]).destroy
-    flash[:success] = "User #{user.login} deleted"
-    redirect_to users_url
+    head :no_content
   end
   
   private
@@ -100,6 +99,10 @@ class UsersController < ApplicationController
     
     # Confirms it is not the same user
     def not_same_user
-      redirect_to(root_url) if current_user? User.find(params[:id])
+      if request.format.json?
+        render :json => [], :status => :unauthorized
+      else
+        redirect_to(root_url)
+      end if current_user? User.find(params[:id])
     end
 end
