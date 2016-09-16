@@ -1,9 +1,5 @@
-UserNGController
-  angularize promote/demote
-
-UserController
-  json for update
-  jsom for index
+ttspinner - test directove modal - may need to change to anurlar modal UI
 
 User view
-  angularize datatable
+Credential view
+  test views

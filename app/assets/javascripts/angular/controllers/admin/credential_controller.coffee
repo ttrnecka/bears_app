@@ -1,4 +1,4 @@
-@bearsNg.controller "Admin::CredentialCtrl", [ 'Restangular', '$uibModal', "flash", "DTOptionsBuilder", (Restangular,$uibModal,flash,DTOptionsBuilder) ->
+@bearsNg.controller "Admin::CredentialCtrl", [ 'Restangular', '$uibModal', "flash", "DTOptionsBuilder","ttspinner", (Restangular,$uibModal,flash,DTOptionsBuilder,ttspinner) ->
    ctrl=@
    ctrl.dtInstance = {}
    ctrl.animationsEnabled = true
@@ -16,8 +16,10 @@
      array.splice(index,1)
    
    credentials = Restangular.all('admin/credentials')
+   ttspinner.show()
    credentials.getList()
      .then (credentials) ->
+       ttspinner.hide()
        ctrl.credentials = credentials
      
    ctrl.delete = (credential) ->

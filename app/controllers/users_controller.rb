@@ -9,8 +9,14 @@ class UsersController < ApplicationController
     redirect_to root_url
   end
   
-  def index
-    @users=User.all
+  def index 
+    respond_to do |format|
+      format.html
+      format.json {
+        @users=User.all 
+        render json: @users
+      }
+    end
   end
   
   def new
@@ -38,16 +44,24 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(user_params)
       # admin updates should be redirected to users unless admin updates himself
-      if current_user.admin? && current_user.id != @user.id
-        flash[:success] = "User #{@user.login} updated"
-        # user updates should be redirected to profile 
-        redirect_to users_path
-      else
-        flash[:success] = "Profile updated"
-        redirect_to @user
+      respond_to do |format|
+        format.html do 
+          if current_user.admin? && current_user.id != @user.id
+            flash[:success] = "User #{@user.login} updated"
+            # user updates should be redirected to profile 
+            redirect_to users_path
+          else
+            flash[:success] = "Profile updated"
+            redirect_to @user
+          end
+        end
+        format.json {render json: @user}
       end
     else
-      render 'edit'
+      respond_to do |format|
+        format.html { render 'edit' }
+        format.json { render({ errors: @user.errors.full_messages }, status: 422) }
+      end
     end
   end
   
@@ -77,7 +91,11 @@ class UsersController < ApplicationController
     
     def correct_user_or_admin
       @user = User.find(params[:id])
-      redirect_to(root_url) unless current_user?(@user) || current_user.admin?
+      if request.format.json?
+        render :json => [], :status => :unauthorized
+      else
+        redirect_to root_url
+      end unless current_user?(@user) || current_user.admin?
     end
     
     # Confirms it is not the same user

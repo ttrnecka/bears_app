@@ -7,12 +7,32 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     @other_user = users(:archer)
   end
   
+  # Index
   test "should get new" do
     get signup_path
     assert_response :success
     assert_select "title", full_title("Sign Up")
   end
   
+  test "should get index when logged in as admin using json" do
+    log_in_as @user
+    get users_path, as: :json, xhr: true
+    assert_equal User.all.to_json, @response.body
+    assert_equal "application/json", @response.content_type
+  end
+  
+  test "should redirect index when not logged in" do
+    get users_path
+    assert_redirected_to login_url
+  end
+  
+  test "should disable turbolinks cache for index" do
+    log_in_as(@user)
+    get users_path
+    assert_select 'meta[name="turbolinks-cache-control"][content="no-cache"]', 1
+  end
+  
+  # Edit
   test "should redirect edit when not logged in" do
     get edit_user_path(@user)
     assert_not flash.empty?
@@ -41,7 +61,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
   
-  # update
+  # Update
   test "should redirect update when logged as wrong user" do
     log_in_as(@other_user)
     patch user_path(@user), params: { user: { name: @user.name,
@@ -61,20 +81,28 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_not flash.empty?
   end
   
-  test "should allow admin to promote/demote user" do
+  test "should allow admin to promote/demote user - json,xhr" do
     log_in_as(@user)
     # promoting
-    patch user_path(@other_user), params: { user: { roles: "A" } }
-    assert_redirected_to users_path
-    follow_redirect!
-    assert_not flash.empty?
+    patch user_path(@other_user), params: { user: { roles: "A" } }, as: :json, xhr: true
+    assert_response :success
     assert_equal "A", @other_user.reload.roles
+    refute_nil JSON.parse(@response.body)["id"]
     # demoting
-    patch user_path(@other_user), params: { user: { roles: "U" } }
-    assert_redirected_to users_path
-    follow_redirect!
-    assert_not flash.empty?
+    patch user_path(@other_user), params: { user: { roles: "U" } }, as: :json, xhr: true
+    assert_response :success
     assert_equal "U", @other_user.reload.roles
+    refute_nil JSON.parse(@response.body)["id"]
+  end
+  
+  test "should not allow non-admin to promote/demote user - json,xhr" do
+    log_in_as(@other_user)
+    # promoting
+    patch user_path(@user), params: { user: { roles: "A" } }, as: :json, xhr: true
+    assert_response :unauthorized
+    # demoting
+    patch user_path(@user), params: { user: { roles: "U" } }, as: :json, xhr: true
+    assert_response :unauthorized
   end
   
   test "should allow user to change profile" do
@@ -107,19 +135,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "changed_name", @user.reload.name 
   end
   
-  test "should redirect index when not logged in" do
-    get users_path
-    assert_redirected_to login_url
-  end
-  
-  test "should disable turbolinks cache for index" do
-    log_in_as(@user)
-    get users_path
-    assert_select 'meta[name="turbolinks-cache-control"][content="no-cache"]', 1
-  end
-  
-  
-  test "should not allow the roles attribute to be edited via the web" do
+  test "should not allow the roles attribute to be edited by user" do
     log_in_as(@other_user)
     assert_not @other_user.admin?
     patch user_path(@other_user), params: {
@@ -129,6 +145,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_not @other_user.reload.admin?
   end
   
+  # Destroy
   test "should redirect destroy when not logged in" do
     assert_no_difference 'User.count' do
       delete user_path(@user)

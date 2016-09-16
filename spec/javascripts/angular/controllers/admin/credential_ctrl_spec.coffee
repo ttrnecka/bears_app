@@ -17,6 +17,7 @@ describe 'Admin::Credential', ()->
   restangular = null
   flash = null
   $timeout = null
+  spinner = null
   
   fake_credentials = [
     {
@@ -48,13 +49,14 @@ describe 'Admin::Credential', ()->
       account: "test"
     }
   describe 'credentialCtrl', ->
-    beforeEach inject (_$controller_,$rootScope,Restangular,_$uibModal_,$injector,_flash_)->
+    beforeEach inject (_$controller_,$rootScope,Restangular,_$uibModal_,$injector,_flash_,ttspinner)->
       $scope=$rootScope.$new();
       $httpBackend = $injector.get('$httpBackend')
       restangular = Restangular
       $uibModal = _$uibModal_
       $controller = _$controller_
       flash = _flash_
+      spinner = ttspinner
       $httpBackend.expectGET("/admin/credentials.json").respond(fake_credentials)
       ctrl = $controller 'Admin::CredentialCtrl', {
         $scope: $scope
@@ -69,7 +71,9 @@ describe 'Admin::Credential', ()->
       $httpBackend.verifyNoOutstandingRequest()
       
     it "should load credentials data",->
+      expect(spinner.state).toBe(true)
       $httpBackend.flush()
+      expect(spinner.state).toBe(false)
       expect(ctrl.credentials[0].account).toEqual(fake_credentials[0].account)
       
     it "should delete credential once confirmed",->

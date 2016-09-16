@@ -1,6 +1,7 @@
 <% provide(:title, 'Users') %>
 <% turbolinks_no_cache %>
-<table id="users_table" datatable="" class="table table-striped table-bordered table-hover">
+<div ng-controller="UserCtrl as ctrl">
+<table id="users_table" datatable="ng" dt-instance="ctrl.dtInstance" class="table table-striped table-bordered table-hover">
 	<thead>
     	<tr>
         	<th>Login</th>
@@ -11,7 +12,24 @@
         </tr>
 	</thead>
 	<tbody>
-		<%= render @users %>
+		<tr ng-repeat="user in ctrl.users">
+		  <td>{{user.login}}</td>
+		  <td>{{user.name}}</td>
+		  <td>{{user.email}}</td>
+		  <td>{{user.roles_to_s() }}</td>
+		  <td>
+			  <div class="btn-group" uib-dropdown>
+			  	  <button type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+				      Actions <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+				      <li role="menuitem" ng-show="user.isAdmin()"><a href="javascript:void(0)" ng-click="ctrl.demote(user)"><i class="fa fa-angle-double-down fa-fw"></i> Demote to user</a></li>
+				      <li role="menuitem" ng-show="user.isUser()"><a href="javascript:void(0)" ng-click="ctrl.promote(user)"><i class="fa fa-angle-double-up fa-fw"></i> Promote to admin</a></li>
+				      <li role="menuitem"><a href="javascript:void(0)" ng-click="ctrl.delete(user)"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+				  </ul>
+		      </div>		
+		  </td>
+		</tr>
 	</tbody>
 </table>
-
+</div>
