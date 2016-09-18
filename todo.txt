@@ -1,9 +1,5 @@
-User view
-Credential view
-  test views
-  
 Array show view
-Angularize array view?
+  Angularize?
 
 Array Capacity Usage Chart - text on bottom goes off the chart
  - limit the amout of items in that graph (scrolling??)

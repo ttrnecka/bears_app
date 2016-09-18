@@ -229,7 +229,7 @@ describe 'Admin::Credential', ()->
     
         return
         
-      it "returns changed credetial upon save", ->
+      it "returns changed credential upon save", ->
         spyOn(modalInstance,'close')
         ctrl.credential.account = "changed"
         ctrl.save()
@@ -382,3 +382,51 @@ describe 'Admin::Credential', ()->
         it "should display the proper title", ->
           $scope.$digest()
           expect(@element.find('h3').text()).toMatch("Edit")
+  
+  describe "Admin::Credentials View",->
+      $compile = null
+      element = null
+      httpBackend = null
+      $uibModal = null
+      $timeout = null
+      $scope = null
+      beforeEach inject (_$compile_, _$rootScope_,$injector, _$uibModal_,_$timeout_) ->
+        $compile = _$compile_
+        $scope = _$rootScope_.$new()
+        $scope.ctrl = null
+        $uibModal = _$uibModal_
+        $timeout=_$timeout_
+        $httpBackend = $injector.get('$httpBackend')
+        spyOn($uibModal,"open").and.returnValue(fakeModal)
+        viewHtml = MagicLamp.loadRaw("admin/credentials/index")
+        ang_element = angular.element(viewHtml)
+        $httpBackend.expectGET("/admin/credentials.json").respond(fake_credentials)
+        element = $compile(ang_element)($scope)
+        # double timeout to handle DT rendering
+        $timeout.flush()
+        $httpBackend.flush()
+        $scope.$digest()
+        $timeout.flush()
+        
+      afterEach ->
+        MagicLamp.clean()
+      
+      it 'should have credentials datatable',->
+        expect(element.find('#credentials_table[datatable="ng"]').length).toEqual(1)
+        # 2 mocked credentials
+        expect(element.find('.credentials_table_line').length).toEqual(2)
+        
+      it 'should display edit option for each credentials', ->
+        expect(element.find('a[ng-click="ctrl.edit(credential)"]').length).toEqual(2)
+        expect(element.find('a[ng-click="ctrl.edit(credential)"]').hasClass('ng-hide')).toBe(false)
+        
+      it 'should display delete option for each credentials', ->
+        expect(element.find('a[ng-click="ctrl.delete(credential)"]').length).toEqual(2)
+        expect(element.find('a[ng-click="ctrl.delete(credential)"]').hasClass('ng-hide')).toBe(false)
+     
+      it 'should display New Credential button and call ctrl add when clicked', ->
+        spyOn(element.scope().ctrl,'add')
+        el = element.find('.dt-buttons > a:first')
+        expect(el.text()).toEqual("New Credential")
+        el.trigger('click')
+        expect(element.scope().ctrl.add).toHaveBeenCalled()

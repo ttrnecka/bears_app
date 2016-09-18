@@ -3,6 +3,9 @@ MagicLamp.fixture(extend: AuthStub) do
 end
 
 MagicLamp.fixture do
-  @users = User.all
   render template: "users/index"
+end
+
+MagicLamp.fixture do
+  render template: "admin/credentials/index"
 end

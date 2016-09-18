@@ -12,7 +12,7 @@
         </tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="user in ctrl.users">
+		<tr class="users_table_line" ng-repeat="user in ctrl.users">
 		  <td>{{user.login}}</td>
 		  <td>{{user.name}}</td>
 		  <td>{{user.email}}</td>
@@ -23,9 +23,9 @@
 				      Actions <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-				      <li role="menuitem" ng-show="user.isAdmin()"><a href="javascript:void(0)" ng-click="ctrl.demote(user)"><i class="fa fa-angle-double-down fa-fw"></i> Demote to user</a></li>
-				      <li role="menuitem" ng-show="user.isUser()"><a href="javascript:void(0)" ng-click="ctrl.promote(user)"><i class="fa fa-angle-double-up fa-fw"></i> Promote to admin</a></li>
-				      <li role="menuitem"><a href="javascript:void(0)" ng-click="ctrl.delete(user)"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+				      <li role="menuitem" ng-show="user.isAdmin()" class="user_demote"><a href="javascript:void(0)" ng-click="ctrl.demote(user)"><i class="fa fa-angle-double-down fa-fw"></i> Demote to user</a></li>
+				      <li role="menuitem" ng-show="user.isUser()" class="user_promote"><a href="javascript:void(0)" ng-click="ctrl.promote(user)"><i class="fa fa-angle-double-up fa-fw"></i> Promote to admin</a></li>
+				      <li role="menuitem" class="user_delete"><a href="javascript:void(0)" ng-click="ctrl.delete(user)"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
 				  </ul>
 		      </div>		
 		  </td>
