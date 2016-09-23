@@ -1,7 +1,7 @@
-Array show view
-  Angularize?
-
 Array Capacity Usage Chart - text on bottom goes off the chart
  - limit the amout of items in that graph (scrolling??)
 
-Array table - ordering space is by string
+
+Maybe later
+Array show view
+  Angularize?

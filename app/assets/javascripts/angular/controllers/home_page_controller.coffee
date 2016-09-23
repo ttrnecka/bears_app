@@ -16,6 +16,13 @@
        ticks: []
        max:0
    }
+   
+   @default_stack_array_options = {
+     xaxis:
+       ticks: []
+       max:0
+       labelHeight: 100
+   }
    @charts = {}
 
    pull_pie_data = (instance_data)->
@@ -40,12 +47,12 @@
        # array stack parsing
        @default_stack_data[0].data = []
        @default_stack_data[1].data = []
-       @default_stack_options.xaxis.ticks = []
+       #@default_stack_options.xaxis.ticks = []
        @default_stack_data[0].data.push [i+0.1, array.data_used] for array,i in graph_data.arrays
        @default_stack_data[1].data.push [i+0.1, array.data_available] for array,i in graph_data.arrays
-       @default_stack_options.xaxis.ticks.push [i+0.55, array.label] for array,i in graph_data.arrays
-       @default_stack_options.xaxis.max = graph_data.arrays.length+0.1
-       @charts.capacity_usage_array = @plotter.stack_chart($('#chart_capacity_usage_array'),@default_stack_data,@default_stack_options) if graph_data.arrays.length>0
+       @default_stack_array_options.xaxis.ticks.push [i+0.55, array.label] for array,i in graph_data.arrays
+       @default_stack_array_options.xaxis.max = graph_data.arrays.length+0.1
+       @charts.capacity_usage_array = @plotter.stack_chart($('#chart_capacity_usage_array'),@default_stack_data,@default_stack_array_options) if graph_data.arrays.length>0
      return
 
    @capacity_distribution_chart_exist = () =>
