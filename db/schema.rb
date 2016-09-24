@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909075339) do
+ActiveRecord::Schema.define(version: 20160924191927) do
 
   create_table "admin_credentials", force: :cascade do |t|
     t.string   "account"
@@ -20,6 +20,15 @@ ActiveRecord::Schema.define(version: 20160909075339) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.index ["description"], name: "index_admin_credentials_on_description", unique: true
+  end
+
+  create_table "admin_resources", force: :cascade do |t|
+    t.string   "address"
+    t.string   "protocol"
+    t.integer  "credential_id"
+    t.integer  "bears_instance_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "bears_instances", force: :cascade do |t|

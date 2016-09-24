@@ -84,12 +84,14 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
   
   def base_layout_for_admin
     assert_select "a[id=?]", "menu_configuration", count: 1, title: "Configuration"
+    assert_select "a[id=?]", "menu_discovery", count: 1, title: "Discovery"
     assert_select "a[id=?]", "menu_users", count: 1, title: "Users"
     assert_select "a[id=?]", "menu_credentials", count: 1, title: "Credentials"
   end
   
   def base_layout_for_non_admin
     assert_select "a[id=?]", "menu_configuration", count: 0, title: "Configuration"
+    assert_select "a[id=?]", "menu_discovery", count: 0, title: "Discovery"
     assert_select "a[id=?]", "menu_users", count: 0, title: "Users"
     assert_select "a[id=?]", "menu_credentials", count: 0, title: "Credentials"
   end

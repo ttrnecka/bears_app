@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+webapi:
+  address: http://127.0.0.1/api
+  protocol: http
+  credential: bears_global
+  bears_instance: vpc_uk
+
+local_3par:
+  address: 10.200.0.132
+  protocol: ssh
+  credential: bears_local
+  bears_instance_id:

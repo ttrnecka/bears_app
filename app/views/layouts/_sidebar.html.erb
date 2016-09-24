@@ -51,9 +51,16 @@
 	                <a href="#" id="menu_configuration"><i class="fa fa-wrench fa-fw"></i> Configuration<span class="fa arrow"></span></a>
 	                   <ul class="nav nav-second-level collapse">
 	                      <li>
-	                         <%= link_to admin_credentials_path, id:"menu_credentials" do %>
-	                         	<i class="fa fa-bars fa-fw"></i> Credentials
-	                         <% end %>
+	                      	<%= link_to "#", id:"menu_discovery" do %>
+	            				<i class="fa fa-eye fa-fw"></i> Discovery<span class="fa arrow"></span>
+	            			<% end %>
+	            			<ul class="nav nav-third-level collapse">
+	            				<li>
+	                         	<%= link_to admin_credentials_path, id:"menu_credentials" do %>
+	                         		<i class="fa fa-bars fa-fw"></i> Credentials
+	                         	<% end %>
+	                         	</li>
+	                        </ul>
 	                      </li>
 	                      <li>
 	                         <%= link_to users_path, id:"menu_users" do %>
