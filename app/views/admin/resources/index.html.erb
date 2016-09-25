@@ -1,0 +1,34 @@
+<% provide(:title, 'Resources - Discovery') %>
+<% turbolinks_no_cache %>
+<div ng-controller="Admin::ResourceCtrl as ctrl">
+	<table id="resources_table" datatable="ng" dt-options="ctrl.dtOptions" dt-instance="ctrl.dtInstance" class="table table-striped table-bordered table-hover">
+		<thead>
+	    	<tr>
+	        	<th>Address</th>
+	        	<th>Protocol</th>
+	            <th>Credential</th>
+	            <th>Instance</th>
+	            <th>Actions</th>
+	        </tr>
+		</thead>
+		<tbody>
+			<tr class="resources_table_line" ng-repeat="resource in ctrl.resources">
+				<td>{{resource.address}}</td>
+				<td>{{resource.protocol}}</td>
+				<td>{{resource.credential}}</td>
+				<td>{{resource.instance}}</td>
+				<td>
+					<div class="btn-group" uib-dropdown>
+				      <button type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+				        Actions <span class="caret"></span>
+				      </button>
+				      <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+				        <li role="menuitem"><a href="javascript:void(0)" ng-click="ctrl.edit(resource)"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+				        <li role="menuitem"><a href="javascript:void(0)" ng-click="ctrl.delete(resource)"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+				      </ul>
+				    </div>		
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -9,3 +9,7 @@ end
 MagicLamp.fixture do
   render template: "admin/credentials/index"
 end
+
+MagicLamp.fixture do
+  render template: "admin/resources/index"
+end

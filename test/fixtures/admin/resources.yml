@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 webapi:
-  address: http://127.0.0.1/api
+  address: 127.0.0.1
   protocol: http
   credential: bears_global
   bears_instance: vpc_uk

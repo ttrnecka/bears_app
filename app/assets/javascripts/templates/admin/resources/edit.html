@@ -1,0 +1,35 @@
+<div class="modal-header">
+	<h3 class="modal-title" id="modal-title">{{ctrl.title}} Resource</h3>
+</div>
+<div class="modal-body" id="modal-body">
+	<div class="panel-body">
+		<form name="ctrl.form" class="css-form" novalidate>
+		<fieldset>
+		  	<div class="form-group" ng-class="{field_with_errors: ctrl.form.address.$error.required}">
+		   		<input type="text" ng-required="true" name="address" class="form-control" placeholder="IP/FQDN" ng-model="ctrl.resource.address"/>
+		    </div>
+		    <div class="form-group" ng-class="{field_with_errors: ctrl.form.protocol.$error.required}">
+		       	<input type="text" name="protocol" ng-required="true" class="form-control" placeholder="Protocol" ng-model="ctrl.resource.protocol"/>
+		    </div>
+		    <div class="form-group" ng-class="{field_with_errors: ctrl.form.credential_id.$error.required}">
+		       	<input type="text" name="credential_id" ng-required="true" class="form-control" placeholder="Credential" ng-model="ctrl.resource.credential_id"/>
+		    </div>
+		    <div class="form-group" ng-class="{field_with_errors: ctrl.form.bears_instance_id.$error.required}">
+		       	<input type="text" name="bears_instance_id" ng-required="true" class="form-control" placeholder="Instance" ng-model="ctrl.resource.bears_instance_id"/>
+		    </div>
+		</fieldset>
+		</form>
+		<div id="error_explanation">
+		    <ul>
+		    	<li name="addr_exist_check_error" ng-show="ctrl.form.address.$error.required">IP/FQDN is required!</li>
+		    	<li name="prot_exist_check_error" ng-show="ctrl.form.protocol.$error.required">Protocol is required!</li>
+		    	<li name="cred_exist_check_error" ng-show="ctrl.form.credential_id.$error.required">Credential is required!</li>
+		    	<li name="bi_exist_check_error" ng-show="ctrl.form.bears_instance_id.$error.required">Instance is required</li>
+		    </ul>
+	  	</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ctrl.save()" ng-disabled="ctrl.save_disabled()">Save</button>
+    <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">Cancel</button>
+</div>

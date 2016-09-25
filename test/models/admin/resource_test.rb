@@ -43,5 +43,11 @@ module Admin
       @resource.credential = nil
       assert_not @resource.valid?
     end
+    
+    test "serialized model should contain credential and bears instance" do
+      json = @resource.to_json
+      refute_nil JSON.parse(json)["credential"]
+      refute_nil JSON.parse(json)["bears_instance"]
+    end
   end
 end

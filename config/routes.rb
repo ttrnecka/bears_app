@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         get "search"
       end
     end
+    resources :resources
   end
   
   mount MagicLamp::Genie, at: "/magic_lamp" if defined?(MagicLamp)
