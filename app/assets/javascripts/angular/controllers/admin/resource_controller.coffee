@@ -1,4 +1,4 @@
-@bearsNg.controller "Admin::ResourceCtrl", [ 'Restangular', '$uibModal', "flash", "DTOptionsBuilder","ttspinner", (Restangular,$uibModal,flash,DTOptionsBuilder,ttspinner) ->
+@bearsNg.controller "Admin::ResourceCtrl", [ 'Restangular', '$uibModal', "flash", "DTOptionsBuilder","ttspinner","$filter", (Restangular,$uibModal,flash,DTOptionsBuilder,ttspinner,$filter) ->
    ctrl=@
    ctrl.dtInstance = {}
    ctrl.dtOptions = DTOptionsBuilder.newOptions().withDOM("<'row'<'col-sm-5'l><'col-sm-2'B><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>").withButtons [
@@ -14,14 +14,42 @@
      index = array.indexOf(obj)
      array.splice(index,1)
    
+   loaded = {
+     resources: false
+     credentials: false
+     instances: false
+   }
+   
+   ctrl.all_loaded = ()->
+     loaded.resources && loaded.credentials && loaded.instances
+   
    resources = Restangular.all('admin/resources')
+   credentials = Restangular.all('admin/credentials')
+   instances = Restangular.all('bears_instances')
+   
    ttspinner.show()
+        
+   credentials.getList()
+     .then (credentials) ->
+       ctrl.credentials = credentials
+     .finally ->
+       loaded.credentials = true
+       if ctrl.all_loaded() then ttspinner.hide()
+   
+   instances.getList()
+     .then (instances) ->
+       ctrl.instances = instances
+     .finally ->
+       loaded.instances = true
+       if ctrl.all_loaded() then ttspinner.hide()
+   
    resources.getList()
      .then (resources) ->
        ctrl.resources = resources
      .finally ->
-       ttspinner.hide()
-     
+       loaded.resources = true
+       if ctrl.all_loaded() then ttspinner.hide()
+             
    ctrl.delete = (resource) ->
       modalInstance = $uibModal.open {
         ariaLabelledBy: 'modal-title',
@@ -103,6 +131,13 @@
             ttspinner.hide()
        , (type) ->
          angular.copy(initial_resource,resource)  
+   
+   ctrl.getCredentialById = (id) ->
+     $filter('getById')(ctrl.credentials, id)
+     
+   ctrl.getInstanceById = (id) ->
+     $filter('getById')(ctrl.instances, id)
+     
    return  
 ]
 

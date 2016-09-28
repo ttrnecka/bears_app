@@ -25,16 +25,7 @@ describe 'Admin::Resource', ()->
       address: "127.0.0.1"
       protocol: "http"
       credential_id: '1'
-      bears_instance_id: '10'
-      credential: {
-        id: '1'
-        description: "Account for BEARS WEB API"
-        account: "bears"
-      }
-      bears_instance: {
-        id: '10'
-        name: "VPC UK"
-      }
+      bears_instance_id: '1'
     },
     {
       id:2
@@ -42,16 +33,33 @@ describe 'Admin::Resource', ()->
       protocol: "ssh"
       credential_id: '2'
       bears_instance_id: '2'
-      credential: {
-        id: '2'
-        description: "Bears account for 3PARs"
-        account: "bears"
-      }
-      bears_instance: {
-        id: '2'
-        name: "Local"
-      }
     },
+  ]
+  
+  fake_credentials = [
+    {
+      id:1
+      description: "acc1"
+      account: "account1"
+    },
+    {
+      id:2
+      description: "acc2"
+      account: "account2"
+    }
+  ]
+  
+  fake_instances = [
+    {
+      id:1
+      name: "VPC UK Instance"
+      comment: "VPC UK Instance"
+    },
+    {
+      id:2
+      name: "VPC Germany Instance"
+      comment: "VPC Germany Instance"
+    }
   ]
   
   fakeModal = {
@@ -72,15 +80,6 @@ describe 'Admin::Resource', ()->
       protocol: "ssh"
       credential_id: '100'
       bears_instance_id: '100'
-      credential: {
-        id: '100'
-        description: "Test account"
-        account: "test"
-      }
-      bears_instance: {
-        id: '100'
-        name: "Test Instance"
-      }
     }
   describe 'resourceCtrl', ->
     beforeEach inject (_$controller_,$rootScope,Restangular,_$uibModal_,$injector,_flash_,ttspinner)->
@@ -92,6 +91,8 @@ describe 'Admin::Resource', ()->
       flash = _flash_
       spinner = ttspinner
       spyOn($uibModal,"open").and.returnValue(fakeModal)
+      $httpBackend.expectGET("/admin/credentials.json").respond(fake_credentials)
+      $httpBackend.expectGET("/bears_instances.json").respond(fake_instances)
       $httpBackend.expectGET("/admin/resources.json").respond(fake_resources)
       ctrl = $controller 'Admin::ResourceCtrl', {
         $scope: $scope
@@ -105,11 +106,13 @@ describe 'Admin::Resource', ()->
       $httpBackend.verifyNoOutstandingExpectation()
       $httpBackend.verifyNoOutstandingRequest()
       
-    it "should load resources data",->
+    it "should load all data",->
       expect(spinner.state).toBe(true)
       $httpBackend.flush()
       expect(spinner.state).toBe(false)
       expect(ctrl.resources[0].address).toEqual(fake_resources[0].address)
+      expect(ctrl.credentials[0].description).toEqual(fake_credentials[0].description)
+      expect(ctrl.instances[0].name).toEqual(fake_instances[0].name)
       
     it "should delete resource once confirmed",->
       $httpBackend.flush()
@@ -370,6 +373,8 @@ describe 'Admin::Resource', ()->
         spyOn($uibModal,"open").and.returnValue(fakeModal)
         viewHtml = MagicLamp.loadRaw("admin/resources/index")
         ang_element = angular.element(viewHtml)
+        $httpBackend.expectGET("/admin/credentials.json").respond(fake_credentials)
+        $httpBackend.expectGET("/bears_instances.json").respond(fake_instances)
         $httpBackend.expectGET("/admin/resources.json").respond(fake_resources)
         element = $compile(ang_element)($scope)
         # double timeout to handle DT rendering
@@ -400,3 +405,9 @@ describe 'Admin::Resource', ()->
         expect(el.text()).toEqual("New Resource")
         el.trigger('click')
         expect(element.scope().ctrl.add).toHaveBeenCalled()
+        
+      it 'shoud display proper credential and bears instance for resource', ->
+        el = element.find('td:contains('+fake_credentials[0].description+')')
+        expect(el.length).toEqual(1)
+        el = element.find('td:contains('+fake_instances[0].name+')')
+        expect(el.length).toEqual(1)

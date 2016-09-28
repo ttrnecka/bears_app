@@ -12,11 +12,11 @@
 	        </tr>
 		</thead>
 		<tbody>
-			<tr class="resources_table_line" ng-repeat="resource in ctrl.resources">
+			<tr ng-show="ctrl.all_loaded()" class="resources_table_line" ng-repeat="resource in ctrl.resources">
 				<td>{{resource.address}}</td>
 				<td>{{resource.protocol}}</td>
-				<td>{{resource.credential}}</td>
-				<td>{{resource.instance}}</td>
+				<td>{{ctrl.getCredentialById(resource.credential_id).description}}</td>
+				<td>{{ctrl.getInstanceById(resource.bears_instance_id).name}}</td>
 				<td>
 					<div class="btn-group" uib-dropdown>
 				      <button type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">

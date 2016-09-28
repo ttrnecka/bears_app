@@ -26,3 +26,14 @@
 @bearsNg.config ['$httpProvider', ($httpProvider)->
   $httpProvider.interceptors.push('errorHandler')
 ]
+
+# pull object from array by id parameter
+
+@bearsNg.filter 'getById', () ->
+  (input, id) ->
+    i=0
+    len=input.length
+    for i in [0..len]
+      if +input[i].id == +id
+        return input[i]
+    return null

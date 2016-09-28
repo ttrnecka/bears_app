@@ -11,6 +11,14 @@
 #                          PATCH  /admin/credentials/:id(.:format)       admin/credentials#update
 #                          PUT    /admin/credentials/:id(.:format)       admin/credentials#update
 #                          DELETE /admin/credentials/:id(.:format)       admin/credentials#destroy
+#          admin_resources GET    /admin/resources(.:format)             admin/resources#index
+#                          POST   /admin/resources(.:format)             admin/resources#create
+#       new_admin_resource GET    /admin/resources/new(.:format)         admin/resources#new
+#      edit_admin_resource GET    /admin/resources/:id/edit(.:format)    admin/resources#edit
+#           admin_resource GET    /admin/resources/:id(.:format)         admin/resources#show
+#                          PATCH  /admin/resources/:id(.:format)         admin/resources#update
+#                          PUT    /admin/resources/:id(.:format)         admin/resources#update
+#                          DELETE /admin/resources/:id(.:format)         admin/resources#destroy
 #               magic_lamp        /magic_lamp                            MagicLamp::Engine
 #             sessions_new GET    /sessions/new(.:format)                sessions#new
 #                     root GET    /                                      static_pages#home
@@ -72,6 +80,7 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
   
   resources :users
+  resources :bears_instances, only: [:index]
   namespace :resource do
     namespace :storage do
       resources :arrays, only: [:index, :show]

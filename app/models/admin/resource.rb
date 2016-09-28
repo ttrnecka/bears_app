@@ -29,10 +29,6 @@ module Admin
     validate :protocol_must_be_from_list
     validate :address_must_be_ip_or_fqdn
     
-    def serializable_hash(*)
-      super(include: [{credential: {only: [:id,:account,:description]}}, bears_instance: {only: [:id,:name]}])
-    end
-    
     private
     
     def protocol_must_be_from_list
