@@ -33,7 +33,8 @@
   (input, id) ->
     i=0
     len=input.length
-    for i in [0..len]
+    if len == 0 then return null
+    for i in [0..len-1]
       if +input[i].id == +id
         return input[i]
     return null

@@ -9,6 +9,8 @@
          ctrl.add()
      }
    ]
+   ctrl.credentials = []
+   ctrl.instances = []
    
    delete_from = (array,obj) ->
      index = array.indexOf(obj)
@@ -88,6 +90,8 @@
             return {
               resource: {
               }
+              credentials: ctrl.credentials
+              instances: ctrl.instances
               mode: "new"
             }
         }
@@ -115,6 +119,8 @@
           data: ->
             return {
               resource: resource
+              credentials: ctrl.credentials
+              instances: ctrl.instances
               mode: "edit"
             }
         }
@@ -144,6 +150,8 @@
 @bearsNg.controller 'resourceEditCtrl', [ "$uibModalInstance", "data",($uibModalInstance, data) ->
   ctrl = @
   ctrl.resource = data.resource
+  ctrl.credentials = data.credentials
+  ctrl.instances = data.instances
   ctrl.mode = data.mode
   ctrl.title = data.mode.charAt(0).toUpperCase() + data.mode.slice(1)
   

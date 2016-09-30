@@ -50,4 +50,32 @@ describe 'Angular setup', ()->
       expect(flash.getMessage()).toEqual("Internal Server Error")
       expect(flash.isDanger()).toBe(true)
       
-     
+describe "Filters", ->
+  describe "getbById filter",->
+  
+  array = [
+    {
+      id:1
+      name: "name1"
+    }
+    {
+      id:2
+      name: "name2"
+    }
+  ]
+    
+  beforeEach(module('bearsApp'))
+  $filter = null
+  
+  beforeEach inject (_$filter_) ->
+    $filter = _$filter_
+    
+  it 'returns the member of array by id property',->
+    expect($filter('getById')(array,1).name).toEqual("name1")
+  
+  it 'returns null if member with given id does not exit',->
+    expect($filter('getById')(array,3)).toEqual(null)
+  
+  it 'returns null if array is empty',->
+    expect($filter('getById')([],3)).toEqual(null)
+  

@@ -12,7 +12,7 @@
 	        </tr>
 		</thead>
 		<tbody>
-			<tr ng-show="ctrl.all_loaded()" class="resources_table_line" ng-repeat="resource in ctrl.resources">
+			<tr class="resources_table_line" ng-repeat="resource in ctrl.resources">
 				<td>{{resource.address}}</td>
 				<td>{{resource.protocol}}</td>
 				<td>{{ctrl.getCredentialById(resource.credential_id).description}}</td>

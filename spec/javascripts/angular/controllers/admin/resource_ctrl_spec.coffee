@@ -78,8 +78,8 @@ describe 'Admin::Resource', ()->
       id: '100'
       address: "test.hp.com"
       protocol: "ssh"
-      credential_id: '100'
-      bears_instance_id: '100'
+      credential_id: 100
+      bears_instance_id: 100
     }
   describe 'resourceCtrl', ->
     beforeEach inject (_$controller_,$rootScope,Restangular,_$uibModal_,$injector,_flash_,ttspinner)->
@@ -108,6 +108,8 @@ describe 'Admin::Resource', ()->
       
     it "should load all data",->
       expect(spinner.state).toBe(true)
+      expect(ctrl.credentials).toEqual([])
+      expect(ctrl.instances).toEqual([])
       $httpBackend.flush()
       expect(spinner.state).toBe(false)
       expect(ctrl.resources[0].address).toEqual(fake_resources[0].address)
@@ -245,7 +247,35 @@ describe 'Admin::Resource', ()->
       expect(ctrl.resources[0].address).toEqual(res.address)
       
   describe 'resourceEdit', ->
-    describe 'controller', ->  
+    describe 'controller', ->
+      credentials = null
+      instances = null
+      beforeEach ->
+        credentials = [
+          {
+            id:100
+            description: "acc1"
+            account: "account1"
+          },
+          {
+            id:1
+            description: "acc2"
+            account: "account2"
+          }
+        ]
+        instances = [
+          {
+            id:100
+            name: "VPC UK Instance"
+            comment: "VPC UK Instance"
+          },
+          {
+            id:1
+            name: "VPC NLR Instance"
+            comment: "VPC NLR Instance"
+          }
+        ]
+        return
       beforeEach inject ($controller,_$templateCache_, _$compile_,$rootScope,_$timeout_,$injector)->
         $scope=$rootScope.$new();
         $timeout = _$timeout_
@@ -254,6 +284,8 @@ describe 'Admin::Resource', ()->
           $uibModalInstance: modalInstance, 
           data: 
             resource: resource
+            credentials: credentials
+            instances: instances
             mode: "edit"
         }
         $templateCache = _$templateCache_
@@ -274,6 +306,12 @@ describe 'Admin::Resource', ()->
         
       it "should initiate resource variable", ->
         expect(ctrl.resource).toEqual(resource)
+        
+      it "should initiate credentials variable", ->
+        expect(ctrl.credentials).toEqual(credentials)
+        
+      it "should initiate instances variable", ->
+        expect(ctrl.instances).toEqual(instances)
           
       describe "template",->
         beforeEach ->
@@ -286,8 +324,8 @@ describe 'Admin::Resource', ()->
           $scope.$digest()
           expect(@element.find('input[name="address"]').val()).toBe(resource.address)
           expect(@element.find('input[name="protocol"]').val()).toBe(resource.protocol)
-          expect(@element.find('input[name="credential_id"]').val()).toBe(resource.credential_id)
-          expect(@element.find('input[name="bears_instance_id"]').val()).toBe(resource.bears_instance_id)
+          expect(@element.find('select[name="credential_id"]').val()).toBe('number:'+resource.credential_id)
+          expect(@element.find('select[name="bears_instance_id"]').val()).toBe('number:'+resource.bears_instance_id)
           expect(@element.find('button[ng-click="ctrl.save()"]').text()).toBe("Save")
           expect(@element.find('button[ng-click="ctrl.cancel()"]').text()).toBe("Cancel")
         
@@ -295,12 +333,12 @@ describe 'Admin::Resource', ()->
           $scope.$digest()
           @element.find('input[name="address"]').val("changed_address").triggerHandler('input')
           @element.find('input[name="protocol"]').val("changed_prot").triggerHandler('input')
-          @element.find('input[name="credential_id"]').val("102").triggerHandler('input')
-          @element.find('input[name="bears_instance_id"]').val("103").triggerHandler('input')
+          @element.find('select[name="credential_id"]').val("number:"+credentials[1].id).change()
+          @element.find('select[name="bears_instance_id"]').val("number:"+instances[1].id).change()
           expect($scope.ctrl.resource.address).toBe("changed_address")
           expect($scope.ctrl.resource.protocol).toBe("changed_prot")
-          expect($scope.ctrl.resource.credential_id).toBe("102")
-          expect($scope.ctrl.resource.bears_instance_id).toBe("103")
+          expect($scope.ctrl.resource.credential_id).toBe(1)
+          expect($scope.ctrl.resource.bears_instance_id).toBe(1)
         
         it "should have fields_wit_errors class divs if address is missing",->
           @element.find('input[name="address"]').val("").triggerHandler('input') 
@@ -313,18 +351,18 @@ describe 'Admin::Resource', ()->
           expect(@element.find('div.field_with_errors').length).toEqual(1)
         
         it "should have fields_with_errors class divs if credential is missing",->
-          @element.find('input[name="credential_id"]').val("").triggerHandler('input') 
+          @element.find('select[name="credential_id"]').val(null).change() 
           $scope.$digest();
           expect(@element.find('div.field_with_errors').length).toEqual(1)
         
         it "should have fields_with_errors class divs if instance is missing",->
-          @element.find('input[name="bears_instance_id"]').val("").triggerHandler('input') 
+          @element.find('select[name="bears_instance_id"]').val(null).change() 
           $scope.$digest();
           expect(@element.find('div.field_with_errors').length).toEqual(1)
           
         it 'should have disabled Save button if form is invalid', ->
           $scope.$digest()
-          @element.find('input[name="bears_instance_id"]').val("").triggerHandler('input')
+          @element.find('select[name="bears_instance_id"]').val(null).change()
           $scope.$digest();
           expect(@element.find('button[ng-click="ctrl.save()"]').prop('disabled')).toBe(true)
 
@@ -342,13 +380,13 @@ describe 'Admin::Resource', ()->
         
         it "should display message about missing credential", ->
           $scope.$digest()
-          @element.find('input[name="credential_id"]').val("").triggerHandler('input')
+          @element.find('select[name="credential_id"]').val(null).change()
           $scope.$digest()
           expect(@element.find('li[name="cred_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
           
         it "should display message about missing instance", ->
           $scope.$digest()
-          @element.find('input[name="bears_instance_id"]').val("").triggerHandler('input')
+          @element.find('select[name="bears_instance_id"]').val(null).change()
           $scope.$digest()
           expect(@element.find('li[name="bi_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
           

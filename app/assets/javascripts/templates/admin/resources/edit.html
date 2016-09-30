@@ -12,10 +12,14 @@
 		       	<input type="text" name="protocol" ng-required="true" class="form-control" placeholder="Protocol" ng-model="ctrl.resource.protocol"/>
 		    </div>
 		    <div class="form-group" ng-class="{field_with_errors: ctrl.form.credential_id.$error.required}">
-		       	<input type="text" name="credential_id" ng-required="true" class="form-control" placeholder="Credential" ng-model="ctrl.resource.credential_id"/>
+		       	<select ng-model="ctrl.resource.credential_id" class="form-control" name="credential_id" ng-required="true" ng-options="credential.id as credential.description for credential in ctrl.credentials">
+		       		<option value="" disabled ng-selected="ctrl.mode=='new'">Credential</option>
+		       	</select>
 		    </div>
 		    <div class="form-group" ng-class="{field_with_errors: ctrl.form.bears_instance_id.$error.required}">
-		       	<input type="text" name="bears_instance_id" ng-required="true" class="form-control" placeholder="Instance" ng-model="ctrl.resource.bears_instance_id"/>
+		       	<select ng-model="ctrl.resource.bears_instance_id" class="form-control" name="bears_instance_id" ng-required="true" ng-options="instance.id as instance.name for instance in ctrl.instances">
+		       		<option value="" disabled ng-selected="ctrl.mode=='new'">Instance</option>
+		       	</select>
 		    </div>
 		</fieldset>
 		</form>
