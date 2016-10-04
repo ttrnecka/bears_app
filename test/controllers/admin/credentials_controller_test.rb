@@ -25,7 +25,7 @@ module Admin
     test "should get index when logged in as admin using json" do
       log_in_as @user
       get admin_credentials_path, as: :json
-      assert_equal admin_credentials(:bears_global, :bears_local).to_json, @response.body
+      assert_equal Admin::Credential.all.to_json, @response.body
       assert_equal "application/json", @response.content_type
     end
     
@@ -45,11 +45,19 @@ module Admin
     test "should destroy credential as admin using json" do
       log_in_as @user
       assert_difference 'Admin::Credential.count',-1 do
-        delete admin_credential_path(@cred), as: :json
+        delete admin_credential_path(admin_credentials(:unlinked)), as: :json
       end
       assert_response :success
     end
     
+    test "should not destroy credential as admin using json if the credential is used in resource" do
+      log_in_as @user
+      assert_no_difference 'Admin::Credential.count' do
+        delete admin_credential_path(@cred), as: :json
+      end
+      assert_response 422
+      assert_equal "Resources must not be using this credential", JSON.parse(@response.body)["errors"][0]
+    end
     
     test "should unauthorize destroy when logged as user using json" do
       log_in_as @other_user

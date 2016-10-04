@@ -24,5 +24,17 @@ module Admin
     validates :account, presence:true
     validates :description, presence:true, uniqueness: true
     validates :password, presence: true, confirmation:true, allow_nil: true
+    has_many  :resources
+    
+    before_destroy :check_for_resources
+    
+    private
+    
+    def check_for_resources
+      if !self.resources.empty?
+        errors.add(:resources, "must not be using this credential")
+        throw :abort
+      end
+    end
   end
 end

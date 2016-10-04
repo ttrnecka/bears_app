@@ -64,5 +64,11 @@ module Admin
       @cred.save
       assert_equal "password", @cred.password
     end
+    
+    test "should not delete credential if used in resource" do
+      assert_no_difference 'Credential.count' do
+        @local_cred.destroy
+      end
+    end
   end
 end

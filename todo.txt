@@ -7,4 +7,3 @@ Array show view
   Angularize?
 
 TODO 
- 

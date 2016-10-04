@@ -41,8 +41,12 @@ module Admin
     end
     
     def destroy
-      credential = Credential.find(params[:id]).destroy
-      head :no_content
+      credential = Credential.find(params[:id])
+      if credential.destroy
+        head :no_content
+      else
+        render json: { errors: credential.errors.full_messages }, status: 422
+      end
     end
     
     def search

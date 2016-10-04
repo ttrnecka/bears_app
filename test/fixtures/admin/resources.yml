@@ -10,4 +10,4 @@ local_3par:
   address: 10.200.0.132
   protocol: ssh
   credential: bears_local
-  bears_instance_id:
+  bears_instance_id: vpc_uk
