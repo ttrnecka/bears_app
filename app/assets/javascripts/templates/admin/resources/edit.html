@@ -5,11 +5,13 @@
 	<div class="panel-body">
 		<form name="ctrl.form" class="css-form" novalidate>
 		<fieldset>
-		  	<div class="form-group" ng-class="{field_with_errors: ctrl.form.address.$error.required}">
-		   		<input type="text" ng-required="true" name="address" class="form-control" placeholder="IP/FQDN" ng-model="ctrl.resource.address"/>
+		  	<div class="form-group" ng-class="{field_with_errors: ctrl.form.address.$error.required || ctrl.form.address.$error.ip_or_fqdn}">
+		   		<input type="text" ng-required="true" name="address" class="form-control" placeholder="IP/FQDN" tt-ip-or-fqdn ng-model="ctrl.resource.address"/>
 		    </div>
 		    <div class="form-group" ng-class="{field_with_errors: ctrl.form.protocol.$error.required}">
-		       	<input type="text" name="protocol" ng-required="true" class="form-control" placeholder="Protocol" ng-model="ctrl.resource.protocol"/>
+		       	<select ng-model="ctrl.resource.protocol" class="form-control" name="protocol" ng-required="true" ng-options="protocol for protocol in ctrl.protocols">
+		       		<option value="" disabled ng-selected="ctrl.mode=='new'">Protocol</option>
+		       	</select>
 		    </div>
 		    <div class="form-group" ng-class="{field_with_errors: ctrl.form.credential_id.$error.required}">
 		       	<select ng-model="ctrl.resource.credential_id" class="form-control" name="credential_id" ng-required="true" ng-options="credential.id as credential.description for credential in ctrl.credentials">
@@ -26,6 +28,7 @@
 		<div id="error_explanation">
 		    <ul>
 		    	<li name="addr_exist_check_error" ng-show="ctrl.form.address.$error.required">IP/FQDN is required!</li>
+		    	<li name="addr_incorrect_check_error" ng-show="ctrl.form.address.$error.ip_or_fqdn">Address must me IP or FQDN!</li>
 		    	<li name="prot_exist_check_error" ng-show="ctrl.form.protocol.$error.required">Protocol is required!</li>
 		    	<li name="cred_exist_check_error" ng-show="ctrl.form.credential_id.$error.required">Credential is required!</li>
 		    	<li name="bi_exist_check_error" ng-show="ctrl.form.bears_instance_id.$error.required">Instance is required</li>

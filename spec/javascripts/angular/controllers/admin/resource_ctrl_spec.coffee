@@ -105,7 +105,13 @@ describe 'Admin::Resource', ()->
     afterEach ->
       $httpBackend.verifyNoOutstandingExpectation()
       $httpBackend.verifyNoOutstandingRequest()
-      
+    
+    it "should have protocols included", ->
+      $httpBackend.flush()
+      expect(ctrl.protocols).toBeDefined()
+      expect(ctrl.protocols).toContain("ssh")  
+      expect(ctrl.protocols).toContain("http")
+      expect(ctrl.protocols).toContain("sssu")
     it "should load all data",->
       expect(spinner.state).toBe(true)
       expect(ctrl.credentials).toEqual([])
@@ -204,6 +210,38 @@ describe 'Admin::Resource', ()->
       expect(spinner.state).toBe(false)
       expect(flash.getMessage()).toEqual("Update failed: " + [msg])
       expect(res.address).toEqual(old_address)
+    
+    it "should copy the resource", ->
+      $httpBackend.flush()
+      # opens edit modal
+      res = ctrl.resources[0]
+      ctrl.copy(res)
+      # edit the resource
+      new_resource = angular.copy(res)
+      new_resource.address = "127.0.0.10"
+      $httpBackend.expectPOST("/admin/resources.json").respond(new_resource)
+      fakeModal.close(new_resource)
+      expect(spinner.state).toBe(true)
+      $httpBackend.flush()
+      expect(spinner.state).toBe(false)
+      expect(flash.getMessage()).toEqual("Resource has been successfully created!!!")
+      expect(ctrl.resources[0].address).toEqual(new_resource.address)
+    
+    it "should fill flash message if copy the resource cannot be done", ->
+      $httpBackend.flush()
+      # opens edit modal
+      res = ctrl.resources[0]
+      ctrl.copy(res)
+      # edit the resource
+      new_resource = angular.copy(res)
+      new_resource.address = "127.0.0.10"
+      msg = "Resource cannot be created"
+      $httpBackend.expectPOST("/admin/resources.json").respond(422,{errors:[msg]})
+      fakeModal.close(new_resource)
+      expect(spinner.state).toBe(true)
+      $httpBackend.flush()
+      expect(spinner.state).toBe(false)
+      expect(flash.getMessage()).toEqual("Adding resource failed: " + [msg])
       
     it "should fill flash message if adding resource cannot be done",->
       $httpBackend.flush()
@@ -312,6 +350,12 @@ describe 'Admin::Resource', ()->
         
       it "should initiate instances variable", ->
         expect(ctrl.instances).toEqual(instances)
+        
+      it "should contain protocols variable", ->
+        expect(ctrl.protocols).toBeDefined()
+        expect(ctrl.protocols).toContain("ssh")  
+        expect(ctrl.protocols).toContain("http")
+        expect(ctrl.protocols).toContain("sssu")
           
       describe "template",->
         beforeEach ->
@@ -323,7 +367,7 @@ describe 'Admin::Resource', ()->
         it "should contain all elements with proper values",->
           $scope.$digest()
           expect(@element.find('input[name="address"]').val()).toBe(resource.address)
-          expect(@element.find('input[name="protocol"]').val()).toBe(resource.protocol)
+          expect(@element.find('select[name="protocol"]').val()).toBe('string:'+resource.protocol)
           expect(@element.find('select[name="credential_id"]').val()).toBe('number:'+resource.credential_id)
           expect(@element.find('select[name="bears_instance_id"]').val()).toBe('number:'+resource.bears_instance_id)
           expect(@element.find('button[ng-click="ctrl.save()"]').text()).toBe("Save")
@@ -331,22 +375,27 @@ describe 'Admin::Resource', ()->
         
         it "should reflect input change in controller", ->
           $scope.$digest()
-          @element.find('input[name="address"]').val("changed_address").triggerHandler('input')
-          @element.find('input[name="protocol"]').val("changed_prot").triggerHandler('input')
+          @element.find('input[name="address"]').val("127.0.0.1").triggerHandler('input')
+          @element.find('select[name="protocol"]').val("string:sssu").change()
           @element.find('select[name="credential_id"]').val("number:"+credentials[1].id).change()
           @element.find('select[name="bears_instance_id"]').val("number:"+instances[1].id).change()
-          expect($scope.ctrl.resource.address).toBe("changed_address")
-          expect($scope.ctrl.resource.protocol).toBe("changed_prot")
+          expect($scope.ctrl.resource.address).toBe("127.0.0.1")
+          expect($scope.ctrl.resource.protocol).toBe("sssu")
           expect($scope.ctrl.resource.credential_id).toBe(1)
           expect($scope.ctrl.resource.bears_instance_id).toBe(1)
         
-        it "should have fields_wit_errors class divs if address is missing",->
+        it "should have fields_with_errors class divs if address is missing",->
           @element.find('input[name="address"]').val("").triggerHandler('input') 
           $scope.$digest();
           expect(@element.find('div.field_with_errors').length).toEqual(1)
         
+        it "should have fields_with_errors class divs if address is not IP or FQDN", ->
+          @element.find('input[name="address"]').val("%%").triggerHandler('input') 
+          $scope.$digest();
+          expect(@element.find('div.field_with_errors').length).toEqual(1)
+          
         it "should have fields_with_errors class divs if protocol is missing",->
-          @element.find('input[name="protocol"]').val("").triggerHandler('input') 
+          @element.find('select[name="protocol"]').val(null).change()  
           $scope.$digest();
           expect(@element.find('div.field_with_errors').length).toEqual(1)
         
@@ -370,24 +419,35 @@ describe 'Admin::Resource', ()->
           $scope.$digest()
           @element.find('input[name="address"]').val("").triggerHandler('input')
           $scope.$digest()
+          expect(@element.find('li[name="addr_exist_check_error"]').length).toEqual(1)
           expect(@element.find('li[name="addr_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
+          
+        it "should display message about incorrect address", ->
+          $scope.$digest()
+          @element.find('input[name="address"]').val("%%").triggerHandler('input')
+          $scope.$digest()
+          expect(@element.find('li[name="addr_incorrect_check_error"]').length).toEqual(1)
+          expect(@element.find('li[name="addr_incorrect_check_error"]').hasClass("ng-hide")).not.toBe(true)
           
         it "should display message about missing protocol", ->
           $scope.$digest()
-          @element.find('input[name="protocol"]').val("").triggerHandler('input')
+          @element.find('select[name="protocol"]').val(null).change() 
           $scope.$digest()
+          expect(@element.find('li[name="prot_exist_check_error"]').length).toEqual(1)
           expect(@element.find('li[name="prot_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
         
         it "should display message about missing credential", ->
           $scope.$digest()
           @element.find('select[name="credential_id"]').val(null).change()
           $scope.$digest()
+          expect(@element.find('li[name="cred_exist_check_error"]').length).toEqual(1)
           expect(@element.find('li[name="cred_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
           
         it "should display message about missing instance", ->
           $scope.$digest()
           @element.find('select[name="bears_instance_id"]').val(null).change()
           $scope.$digest()
+          expect(@element.find('li[name="bi_exist_check_error"]').length).toEqual(1)
           expect(@element.find('li[name="bi_exist_check_error"]').hasClass("ng-hide")).not.toBe(true)
           
         it "should display the proper title", ->
@@ -436,6 +496,10 @@ describe 'Admin::Resource', ()->
       it 'should display delete option for each resource', ->
         expect(element.find('a[ng-click="ctrl.delete(resource)"]').length).toEqual(2)
         expect(element.find('a[ng-click="ctrl.delete(resource)"]').hasClass('ng-hide')).toBe(false)
+      
+      it 'should display copy option for each resource', ->
+        expect(element.find('a[ng-click="ctrl.copy(resource)"]').length).toEqual(2)
+        expect(element.find('a[ng-click="ctrl.copy(resource)"]').hasClass('ng-hide')).toBe(false)
      
       it 'should display New Resource button and call ctrl add when clicked', ->
         spyOn(element.scope().ctrl,'add')

@@ -6,5 +6,5 @@ Maybe later
 Array show view
   Angularize?
 
-TODO - ip/fqdn check in resource edit, protocol select input
-test add resource menu 
+TODO 
+ 

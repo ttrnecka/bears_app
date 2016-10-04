@@ -24,10 +24,12 @@ module Admin
     
     validates :address, presence: true
     validates :protocol, presence: true
+    validates :protocol, uniqueness: {scope: :address, message: "resource with the same combination of address and protocol already exists"}
     validates :credential_id, presence:true
     
     validate :protocol_must_be_from_list
     validate :address_must_be_ip_or_fqdn
+    
     
     private
     

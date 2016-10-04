@@ -9,6 +9,13 @@
          ctrl.add()
      }
    ]
+   ctrl.protocols = 
+     <%= 
+       Admin::Resource::PROTOCOLS.each do |p|
+         "'#{p}',"
+       end 
+     %>
+   
    ctrl.credentials = []
    ctrl.instances = []
    
@@ -138,6 +145,35 @@
        , (type) ->
          angular.copy(initial_resource,resource)  
    
+   ctrl.copy = (resource) ->
+      new_resource = angular.copy(resource)
+      modalInstance = $uibModal.open {
+        ariaLabelledBy: 'modal-title',
+        ariaDescribedBy: 'modal-body',
+        templateUrl: 'admin/resources/edit.html',
+        controller: 'resourceEditCtrl',
+        controllerAs: 'ctrl',
+        resolve: {
+          data: ->
+            return {
+              resource: new_resource
+              credentials: ctrl.credentials
+              instances: ctrl.instances
+              mode: "new"
+            }
+        }
+      }
+
+      modalInstance.result.then (resource) ->
+          ttspinner.show()
+          resources.post(resource).then (response)->
+            flash.reportSuccess("Resource has been successfully created!!!")
+            ctrl.resources.unshift(response)
+          , (result)->
+            flash.reportDanger("Adding resource failed: "+result.data.errors)
+          .finally ->
+            ttspinner.hide()
+         
    ctrl.getCredentialById = (id) ->
      $filter('getById')(ctrl.credentials, id)
      
@@ -152,6 +188,12 @@
   ctrl.resource = data.resource
   ctrl.credentials = data.credentials
   ctrl.instances = data.instances
+  ctrl.protocols = 
+     <%= 
+       Admin::Resource::PROTOCOLS.each do |p|
+         "'#{p}',"
+       end 
+     %>
   ctrl.mode = data.mode
   ctrl.title = data.mode.charAt(0).toUpperCase() + data.mode.slice(1)
   
